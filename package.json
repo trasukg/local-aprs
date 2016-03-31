@@ -1,0 +1,16 @@
+{
+  "name": "local-aprs",
+  "version": "1.0.0",
+  "description": "A local, RF-based APRS web site and display client.",
+  "main": "index.js",
+  "scripts": {
+    "test": "jasmine"
+  },
+  "keywords": [
+    "aprs",
+    "websocket",
+    "client"
+  ],
+  "author": "Greg Trasuk",
+  "license": "Apache-2.0"
+}
