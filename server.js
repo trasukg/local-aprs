@@ -22,11 +22,26 @@ var aprsUtils=require("utils-for-aprs");
 var APRSProcessor=aprsUtils.APRSProcessor;
 var serialport=require('serialport');
 var SerialPort=serialport.SerialPort;
+var express=require('express');
+var log4js=require('log4js');
+var hbs=require('express-hbs');
+var ax25utils=aprsUtils.ax25utils;
 
+var config=require("./config.json");
+var packetProcessingFunctions=[];
+var aprsProcessor;
+var storedPackets;
+var app;
+var http;
+
+var logger=log4js.getLogger('main');
+
+loggingIsDoneThroughLog4js();
 theresAStorageAreaForPackets();
 packetsComeFromTheRadio();
 incomingPacketsGetTimestamped();
 incomingPacketsGoToStorage();
+packetsWithErrorsGetLogged();
 //incomingPacketsGetDigipeated();
 storedPacketsExpireAfter60Minutes();
 theresAWebServer();
@@ -34,36 +49,55 @@ theresAWebServer();
 //clientsCanConnectToSockets();
 //incomingPacketsGoToSocketClients();
 clientsCanDownloadThePacketStoreThroughRESTfulAPI();
+clientsCanSeeThePackets();
 
 function theresAStorageAreaForPackets() {
   storedPackets=[];
 }
 
 function packetsComeFromTheRadio() {
-  port=new SerialPort(process.argv[2],
+  var logger=log4js.getLogger('tnc');
+  aprsProcessor=new APRSProcessor();
+  aprsProcessor.on('aprsData', function(data) {
+    logger.debug(data);
+  });
+  port=new SerialPort(config["tnc-port"],
   {
-    baudrate: 1200,
+    baudrate: config["tnc-baud"],
     parser: aprsUtils.framing.tncFrameParser()
   } );
   // On open, install a handler that passes data to the aprsProcessor.
   port.on('open', function() {
-    console.log("Port opened");
-    aprsProcessor=new APRSProcessor();
-
+    logger.info("Port opened: " + config["tnc-port"] + " at " +
+      config["tnc-baud"] + " baud");
     port.on('data', function(data) {
+      logger.debug('Received packet');
       aprsProcessor.data(data);
     });
   });
 }
 
+var bodyParser=require('body-parser');
+
 function theresAWebServer() {
-  app = require('express')();
+  app = express();
   http = require('http').Server(app);
+  var serveStatic=require('serve-static');
 
-  app.get('/', function(req, res){
-    res.sendFile(__dirname + '/index.html');
+  hbs.registerHelper('address', function(address) {
+    return ax25utils.addressToString(address);
   });
-
+  hbs.registerHelper('path', function(address) {
+    return ax25utils.repeaterPathToString(address);
+  });
+  // Setup Handlebars templates.
+  app.engine('hbs', hbs.express4({
+    partialsDir: __dirname + "/views/partials",
+    layoutsDir: __dirname + "/views/layouts"
+  }));
+  app.set('view engine', 'hbs');
+  app.set('views', __dirname + '/views');
+  app.use(serveStatic('static', { dotfiles: 'deny'}));
   http.listen(3000, function(){
     console.log('listening on *:3000');
   });
@@ -80,13 +114,13 @@ function setupSocketDotIOServer() {
 }
 
 function incomingPacketsGetTimestamped() {
-  aprsProcessor.on('aprsPacket', function() {
+  aprsProcessor.on('aprsData', function(packet) {
     packet.receivedAt=new Date();
   });
 }
 
 function incomingPacketsGoToStorage() {
-  aprsProcessor.on('aprsPacket', function(packet) {
+  aprsProcessor.on('aprsData', function(packet) {
     storedPackets.push(packet);
   });
 }
@@ -97,9 +131,36 @@ function storedPacketsExpireAfter60Minutes() {
   var expirePackets=function() {
     var now=new Date().getTime();
     var expiryTime=now - EXPIRE_INTERVAL;
-    while(storedPackets && storedPackets[0].receivedAt.getTime() < expiryTime) {
+    while(storedPackets.length>0 && storedPackets[0].receivedAt.getTime() < expiryTime) {
       storedPackets.shift();
     }
   }
   setInterval(expirePackets,5000);
+}
+
+function clientsCanDownloadThePacketStoreThroughRESTfulAPI() {
+  var router=express.Router();
+  router.get("/recent-packets", function(req,res) {
+    res.json(storedPackets);
+  });
+  app.use("/api", router);
+}
+
+function loggingIsDoneThroughLog4js() {
+  log4js.configure('log-config.json');
+  logger.debug("logging system setup.");
+}
+
+function packetsWithErrorsGetLogged() {
+  var logger=log4js.getLogger('aprs');
+  aprsProcessor.on('error', function(err, frame) {
+    logger.error("Got error on received frame." + err);
+    logger.debug(frame);
+  });
+}
+
+function clientsCanSeeThePackets() {
+  app.get("/index.html", function(req, res) {
+    res.render('index', { packets: storedPackets });
+  });
 }

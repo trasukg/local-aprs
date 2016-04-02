@@ -1,0 +1,7 @@
+{{!< default}}
+
+<h1>Recent Packets</h1>
+{{#each packets}}
+  {{this.receivedAt}}:{{address this.source}} -> {{address this.destination}}
+  ({{path this.repeaterPath}})> {{this.info}}<br>
+{{/each}}
