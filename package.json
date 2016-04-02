@@ -12,5 +12,11 @@
     "client"
   ],
   "author": "Greg Trasuk",
-  "license": "Apache-2.0"
+  "license": "Apache-2.0",
+  "dependencies": {
+    "express": "^4.13.4",
+    "serialport": "^2.0.6",
+    "socket.io": "^1.4.5",
+    "utils-for-aprs": "^1.0.0"
+  }
 }
