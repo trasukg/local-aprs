@@ -1,4 +1,4 @@
-
 **/.fuse_hidden*
+node_modules
 node_modules/**
 
