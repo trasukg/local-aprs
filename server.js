@@ -25,6 +25,7 @@ var SerialPort=serialport.SerialPort;
 
 theresAStorageAreaForPackets();
 packetsComeFromTheRadio();
+unlessWereInSimulationMode(packetsComeFromTheRadio);
 incomingPacketsGetTimestamped();
 incomingPacketsGoToStorage();
 //incomingPacketsGetDigipeated();
@@ -102,4 +103,13 @@ function storedPacketsExpireAfter60Minutes() {
     }
   }
   setInterval(expirePackets,5000);
+}
+
+function unlessWereInSimulationMode(realMode) {
+  if (process.argv[2]=='simulate') {
+    // Setup to use the last 100 or so simulated packets over the previous hour.
+    console.log("Entering simulation mode...");
+  } else {
+    realMode();
+  }
 }
