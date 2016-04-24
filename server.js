@@ -43,7 +43,7 @@ incomingPacketsGetTimestamped();
 incomingPacketsGoToStorage();
 packetsWithErrorsGetLogged();
 //incomingPacketsGetDigipeated();
-storedPacketsExpireAfter60Minutes();
+storedPacketsExpireAfterSomeTime();
 theresAWebServer();
 //theresASocketDotIOServer();
 //clientsCanConnectToSockets();
@@ -125,9 +125,9 @@ function incomingPacketsGoToStorage() {
   });
 }
 
-var EXPIRE_INTERVAL=60*60*1000;
+var EXPIRE_INTERVAL=config.standardPacketMinutesToLive*60*1000;
 
-function storedPacketsExpireAfter60Minutes() {
+function storedPacketsExpireAfterSomeTime() {
   var expirePackets=function() {
     var now=new Date().getTime();
     var expiryTime=now - EXPIRE_INTERVAL;

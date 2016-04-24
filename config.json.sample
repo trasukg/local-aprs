@@ -1,0 +1,7 @@
+{
+  "tnc-port": "/dev/ttyUSB0",
+  "tnc-baud": 1200,
+  "standardPacketMinutesToLive": 60,
+  "bulletinHoursToLive": 4,
+  "announcementHoursToLive": 24
+}
