@@ -146,6 +146,7 @@ function unlessWereInSimulationMode(realMode) {
   } else {
     realMode();
   }
+}
 
 function clientsCanDownloadThePacketStoreThroughRESTfulAPI() {
   var router=express.Router();
@@ -172,5 +173,4 @@ function clientsCanSeeThePackets() {
   app.get("/index.html", function(req, res) {
     res.render('index', { packets: storedPackets });
   });
->>>>>>> 98b5cc6a8f806734db27349206d778a07161fab7
 }
