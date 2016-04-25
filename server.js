@@ -26,6 +26,7 @@ var express=require('express');
 var log4js=require('log4js');
 var hbs=require('express-hbs');
 var ax25utils=aprsUtils.ax25utils;
+var tncSimulator=aprsUtils.tncSimulator;
 
 var config=require("./config.json");
 var packetProcessingFunctions=[];
@@ -37,14 +38,20 @@ var http;
 var logger=log4js.getLogger('main');
 
 loggingIsDoneThroughLog4js();
+
+//The packet handling needs to be setup before packets start coming.
 theresAStorageAreaForPackets();
-packetsComeFromTheRadio();
-unlessWereInSimulationMode(packetsComeFromTheRadio);
+theAPRSProcessorProcessesPacketData();
 incomingPacketsGetTimestamped();
 incomingPacketsGoToStorage();
 packetsWithErrorsGetLogged();
 //incomingPacketsGetDigipeated();
 storedPacketsExpireAfterSomeTime();
+if(userWantsSimulationMode()) {
+  packetsComeFromSampleFrames();
+} else {
+  packetsComeFromTheRadio();
+}
 theresAWebServer();
 //theresASocketDotIOServer();
 //clientsCanConnectToSockets();
@@ -56,12 +63,15 @@ function theresAStorageAreaForPackets() {
   storedPackets=[];
 }
 
-function packetsComeFromTheRadio() {
-  var logger=log4js.getLogger('tnc');
+function theAPRSProcessorProcessesPacketData() {
   aprsProcessor=new APRSProcessor();
   aprsProcessor.on('aprsData', function(data) {
     logger.debug(data);
   });
+}
+
+function packetsComeFromTheRadio() {
+  var logger=log4js.getLogger('tnc');
   port=new SerialPort(config["tnc-port"],
   {
     baudrate: config["tnc-baud"],
@@ -139,13 +149,8 @@ function storedPacketsExpireAfterSomeTime() {
   setInterval(expirePackets,5000);
 }
 
-function unlessWereInSimulationMode(realMode) {
-  if (process.argv[2]=='simulate') {
-    // Setup to use the last 100 or so simulated packets over the previous hour.
-    console.log("Entering simulation mode...");
-  } else {
-    realMode();
-  }
+function userWantsSimulationMode() {
+  return (process.argv[2]=='simulate');
 }
 
 function clientsCanDownloadThePacketStoreThroughRESTfulAPI() {
@@ -173,4 +178,28 @@ function clientsCanSeeThePackets() {
   app.get("/index.html", function(req, res) {
     res.render('index', { packets: storedPackets });
   });
+}
+
+function packetsComeFromSampleFrames() {
+  var testPackets=require("./node_modules/utils-for-aprs/spec/sample-frames.js").sampleFrames;
+  testPackets=testPackets.filter(function(packet) {
+    return (packet.length>0);
+  });
+  // Start by feeding in 50 packets at 10/s, then feed in 1 per second.
+  var currentPacket=0;
+  var packetSource=function() {
+    var packetBuffer=new Buffer(testPackets[currentPacket]);
+    currentPacket++;
+    if (currentPacket>=testPackets.length) {
+      currentPacket=0;
+    }
+    return packetBuffer;
+  }
+  tncSimulator(packetSource,function(data) {
+    try {
+      aprsProcessor.data(data);
+    } catch(err) {
+      console.log(err);
+    }
+  }, 10, 5, 1/30);
 }
