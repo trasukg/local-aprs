@@ -93,7 +93,7 @@ var bodyParser=require('body-parser');
 function theresAWebServer() {
   app = express();
   http = require('http').Server(app);
-  var serveStatic=require('serve-static');
+  //var serveStatic=require('serve-static');
 
   hbs.registerHelper('address', function(address) {
     return ax25utils.addressToString(address);
@@ -108,7 +108,10 @@ function theresAWebServer() {
   }));
   app.set('view engine', 'hbs');
   app.set('views', __dirname + '/views');
-  app.use(serveStatic('static', { dotfiles: 'deny'}));
+  app.use(express.static( "/static", { dotfiles: 'deny', index: 'index.html'}));
+  app.get('/', function(req,res) {
+    res.redirect('index.html');
+  });
   http.listen(3000, function(){
     console.log('listening on *:3000');
   });
