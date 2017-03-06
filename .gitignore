@@ -3,3 +3,5 @@ node_modules
 node_modules/**
 /config.json
 nohup.out
+/built-web
+/built-web/**

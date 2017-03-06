@@ -9,8 +9,8 @@
         }
     ],
     "levels": {
-        "[all]": "INFO",
-        "main": "INFO",
+        "[all]": "DEBUG",
+        "main": "DEBUG",
         "tnc": "DEBUG"
     }
 }

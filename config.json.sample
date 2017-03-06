@@ -1,6 +1,6 @@
 {
-  "tnc-port": "/dev/ttyUSB0",
-  "tnc-baud": 1200,
+  "kiss-host": "raspberrypi",
+  "kiss-port": 8001,
   "standardPacketMinutesToLive": 60,
   "bulletinHoursToLive": 4,
   "announcementHoursToLive": 24

@@ -1,6 +1,4 @@
-<!DOCTYPE html>
-
-<!--
+/*
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
 distributed with this work for additional information
@@ -17,16 +15,14 @@ software distributed under the License is distributed on an
 KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
--->
+*/
 
-<script src="/socket.io/socket.io.js"></script>
+/* This module provides a function that configures the oauth2 support, so the
+client application can authenticate itself and get an access token.
+*/
 
-<script>
-  var socket = io();
-</script>
+'use strict';
 
-<h1>This is a sample app for the local-aprs server.</h1>
-
-<p>
-  More interesting applications should follow...
-</p>
+module.exports=function(ctx) {
+  // Nothing here yet.  Need to implement
+}

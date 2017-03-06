@@ -79,7 +79,16 @@ algorithm (the server "owns" the radio, so gets to manage the traffic over it).
 If required, the server can also run a local digipeater.
 
 This project includes the code for the web socket server that connects to the
-TNC and radio (including digipeating functionality).
+TNC and radio.  The TNC connection is KISS-over-TCP to localhost:8001
+
 The client application will be separate, as will the map server.  All the pieces
 will end up as separate applications that are installed behind a front-end web
 server (e.g. Apache).
+
+# Running the system
+
+Right now, the system is a development-mode system. In
+order to run, clone the repository and then run   
+    gulp run  
+The system will startup and begin to serve out the application,
+which you can access at localhost:3000.
