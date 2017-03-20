@@ -17,11 +17,27 @@ specific language governing permissions and limitations
 under the License.
 */
 
-/* This is the main entry point and setup file for the client application.
-*/
-'use strict';
-var app = require('angular').module('local_aprs_client');
+module.exports=function($scope, $mdSidenav, hostService) {
+  this.rawPackets=[];
+  /* Events may run in other context, so preserve 'this'. */
+  var self=this;
+  /* Display the left side navigation menu. */
+  this.toggleList=function() {
+    $mdSidenav('left').toggle();
+  }
 
-app.service('hostService', require('./HostService'));
-app.controller('AppController', require('./AppController'));
-app.filter('toTNC2form', require('./toTNC2FormFilter'));
+  this.connected=false;
+
+  hostService.on('connected', function() {
+    this.connected=true;
+  });
+
+  hostService.on('disconnected', function() {
+    this.connected=false;
+  });
+
+  hostService.on('aprsData', function(packet) {
+    console.log('got packet' + packet);
+    self.rawPackets.push(packet);
+  });
+}

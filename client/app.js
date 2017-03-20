@@ -18,14 +18,19 @@ under the License.
 */
 'use strict';
 
-var angular = require('angular');
-/* Define the module once and only once... */
-var app = angular.module('local_aprs_client', ['ngMaterial']);
-
-/* External devDependencies */
+require('angular');
 require('angular-material');
+/* External devDependencies */
+
 require('angular-animate');
 require('angular-aria');
+require('angularjs-scroll-glue');
+
+/* Define the module once and only once... */
+var app = angular.module('local_aprs_client',
+  [ 'ngMaterial',
+    'luegg.directives']);
+
 
 /* App modules */
 require('./main');

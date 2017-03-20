@@ -1,3 +1,4 @@
+
 /*
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
@@ -17,11 +18,18 @@ specific language governing permissions and limitations
 under the License.
 */
 
-/* This is the main entry point and setup file for the client application.
-*/
-'use strict';
-var app = require('angular').module('local_aprs_client');
+var ax25utils=require('utils-for-aprs').ax25utils;
 
-app.service('hostService', require('./HostService'));
-app.controller('AppController', require('./AppController'));
-app.filter('toTNC2form', require('./toTNC2FormFilter'));
+module.exports=function() {
+  return function(frame) {
+    return "[" + frame.receivedAt + "] " + ax25utils.addressToString(frame.source) +
+      '->' + ax25utils.addressToString(frame.destination) +
+      ' (' + ax25utils.repeaterPathToString(frame.repeaterPath) + ')' +
+      ((frame.forwardingSource!=undefined)?(
+        " via " + ax25utils.addressToString(frame.forwardingSource) +
+        '->' + ax25utils.addressToString(frame.forwardingDestination) +
+        ' (' + ax25utils.repeaterPathToString(frame.forwardingRepeaterPath) + ')')
+        : '') +
+      frame.info;
+  };
+};

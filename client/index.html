@@ -7,51 +7,36 @@
   <link rel="stylesheet" href="/css/angular-material.css">
   <script src='/app.js'></script>
 </head>
-<body >
-  <div layout="row" ng-controller="SampleController as c">
+<body layout=column ng-controller="AppController as app" >
+  <!-- "App Bar" -->
+  <md-toolbar layout="row" class="md-toolbar-tools">
+    <md-button class="menu md-icon-button" hide-gt-sm ng-click="app.toggleList()" aria-label="Show User List">
+      <md-icon md-svg-icon="menu"></md-icon>
+    </md-button>
+    <h1>Local-APRS</h1>
+  </md-toolbar>
+
+  <!-- Main content area and side nav. -->
+  <div layout="row">
     <md-sidenav
     class="md-sidenav-left"
     md-component-id="left"
     md-is-locked-open="$mdMedia('gt-sm')"
     md-whiteframe="4">
-
-    <md-toolbar class="md-theme-indigo">
-      <h1 class="md-toolbar-tools">Sidenav Left</h1>
-    </md-toolbar>
     <md-content layout-padding>
-      <md-button class="md-primary" ng-click="$mdSidenav('left').close()">
-        Close Sidenav Left
+      <md-button class="md-primary">
+        Raw Packets
       </md-button>
-      <p hide show-gt-md>
-        This sidenav is locked open on your device. To go back to the default behavior,
-        narrow your display.
-      </p>
-
     </md-content>
 
   </md-sidenav>
 
-  <md-content flex layout-padding>
-
-    <div layout="column" layout-align="top center">
-      <md-button ng-click="$mdSidenav('left').toggle()" class="md-primary">Open sidenav</md-button>
-
-      <p>
-        The left sidenav will 'lock open' on a medium (>=960px wide) device.
-      </p>
-      <p>
-        The right sidenav will focus on a specific child element.
-      </p>
-      <input ng-model="name"></input>
-      Hi there, {{name}}, current value is {{c.x}}!
-
-      <md-button  ng-click="c.double()">Here's a button</md-button>
-
-
-    </div>
-
-    <div flex></div>
-
+  <md-content flex layout-padding scroll-glue>
+    <md-list flex >
+      <md-list-item ng-repeat="packet in app.rawPackets">
+        {{packet | toTNC2form}}
+      </md-list-item>
+    </md-list>
   </md-content>
 </div>
 </body>
