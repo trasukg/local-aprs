@@ -17,12 +17,38 @@ specific language governing permissions and limitations
 under the License.
 */
 
-/* This is the main entry point and setup file for the client application.
+/*
+  This is a very low-level interface to the web socket host connection.
+  It acts as an event emitter to notify the client that a connection has been made
+  or broken,
+  and then notifies on every packet received.
 */
-'use strict';
-var app = require('angular').module('local_aprs_client');
 
-app.service('hostService', require('./HostService'));
-app.service('aprsEngine', require('./AprsEngine'));
-app.controller('AppController', require('./AppController'));
-app.filter('toTNC2form', require('./toTNC2FormFilter'));
+var aprsEngine=function(hostService) {
+
+    var connected=false;
+    var rawPackets=[];
+
+    this.connected=function() {
+      return connected;
+    }
+
+    this.rawPackets=function() {
+      return rawPackets;
+    }
+    
+    hostService.on('connected', function() {
+      connected=true;
+    });
+
+    hostService.on('disconnected', function() {
+      connected=false;
+    });
+
+    hostService.on('aprsData', function(packet) {
+      console.log('got packet' + packet);
+      rawPackets.push(packet);
+    });
+};
+
+module.exports=aprsEngine;

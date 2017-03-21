@@ -31,9 +31,9 @@
 
   </md-sidenav>
 
-  <md-content flex layout-padding scroll-glue>
+  <md-content flex layout-padding style="height: 500px;" scroll-glue>
     <md-list flex >
-      <md-list-item ng-repeat="packet in app.rawPackets">
+      <md-list-item ng-repeat="packet in aprsEngine.rawPackets()">
         {{packet | toTNC2form}}
       </md-list-item>
     </md-list>

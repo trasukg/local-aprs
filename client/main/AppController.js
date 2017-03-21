@@ -17,8 +17,10 @@ specific language governing permissions and limitations
 under the License.
 */
 
-module.exports=function($scope, $mdSidenav, hostService) {
-  this.rawPackets=[];
+module.exports=function($scope, $mdSidenav, aprsEngine) {
+  /* All data handling, etc, is in the packet engine. */
+  $scope.aprsEngine=aprsEngine;
+
   /* Events may run in other context, so preserve 'this'. */
   var self=this;
   /* Display the left side navigation menu. */
@@ -26,18 +28,4 @@ module.exports=function($scope, $mdSidenav, hostService) {
     $mdSidenav('left').toggle();
   }
 
-  this.connected=false;
-
-  hostService.on('connected', function() {
-    this.connected=true;
-  });
-
-  hostService.on('disconnected', function() {
-    this.connected=false;
-  });
-
-  hostService.on('aprsData', function(packet) {
-    console.log('got packet' + packet);
-    self.rawPackets.push(packet);
-  });
 }
