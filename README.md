@@ -89,6 +89,34 @@ server (e.g. Apache).
 
 Right now, the system is a development-mode system. In
 order to run, clone the repository and then run   
-    gulp run  
-The system will startup and begin to serve out the application,
+    gulp  
+Copy the 'config.json.sample' file to 'config.json' and edit it to reflect the
+required KISS port and KISS host.  For example, if you're using Dire Wolf
+on the local machine, then you'd set them as follows:
+
+    {
+      "kiss-host": "localhost",
+      "kiss-port": 8001,
+      "standardPacketMinutesToLive": 60,
+      "bulletinHoursToLive": 4,
+      "announcementHoursToLive": 24
+    }
+
+If you were using 'share-tnc' on a host called 'raspberrypi', you'd set it like:
+
+    {
+      "kiss-host": "raspberrypi",
+      "kiss-port": 8001,
+      "standardPacketMinutesToLive": 60,
+      "bulletinHoursToLive": 4,
+      "announcementHoursToLive": 24
+    }
+
+Now, run 'npm start' or 'gulp run', and the system will startup
+and begin to serve out the application,
 which you can access at localhost:3000.
+
+# Portability
+
+local-aprs has been tested on OSX and Windows 7, and should be good to go
+wherever you can run Node.
