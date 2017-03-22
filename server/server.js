@@ -30,6 +30,8 @@ var tncSimulator=aprsUtils.tncSimulator;
 var theWebServerSupportsOAuth2=require('./oauth2-support');
 var logger=log4js.getLogger('main');
 var expressWs=require('express-ws');
+var path=require('path');
+var process=require('process');
 
 var ctx={};
 ctx.config=require("../config.json");
@@ -111,12 +113,14 @@ function theresAWebServer(ctx) {
   });
   // Setup Handlebars templates.
   ctx.app.engine('hbs', hbs.express4({
-    partialsDir: __dirname + "/views/partials",
-    layoutsDir: __dirname + "/views/layouts"
+    partialsDir: path.join(__dirname, "views", "partials"),
+    layoutsDir: path.join(__dirname, "views", "layouts")
   }));
   ctx.app.set('view engine', 'hbs');
-  ctx.app.set('views', __dirname + '/views');
-  ctx.app.use(express.static( "./built-web", { dotfiles: 'deny', index: 'index.html'}));
+  ctx.app.set('views', path.join(__dirname, 'views'));
+  console.log("static files in '" + path.join(process.cwd(),"built-web") + "'")
+  ctx.app.use(express.static( path.join(process.cwd(),"built-web"),
+    { dotfiles: 'deny', index: 'index.html'}));
   ctx.app.get('/', function(req,res) {
     res.redirect('index.html');
   });
