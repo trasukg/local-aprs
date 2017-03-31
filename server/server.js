@@ -222,6 +222,8 @@ function clientsCanConnectToSockets(ctx) {
     ctx.clients.push(ws);
     ws.on('message', function(msg) {
       logger.debug('received a message', msg);
+      msg=JSON.parse(msg);
+      handleWSMessage(ws, msg);
     });
     ws.on('close', function() {
       var index=ctx.clients.indexOf(ws);
@@ -241,3 +243,18 @@ function incomingPacketsGoToSocketClients(ctx) {
     });
   });
 };
+
+function handleWSMessage(ws, msg) {
+  logger.debug("command=" + msg.command);
+  if (msg.command=='config?') {
+    ws.send(JSON.stringify({
+      config: ctx.config,
+      replyTo: msg.msgId
+    }));
+  } else if (msg.command=="packets?") {
+    ws.send(JSON.stringify({
+      packets: ctx.storedPackets,
+      replyTo: msg.msgId
+    }));
+  }
+}

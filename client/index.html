@@ -17,7 +17,7 @@
   </md-toolbar>
 
   <!-- Main content area and side nav. -->
-  <div layout="row">
+  <div layout="row" style="height: 500px;">
     <md-sidenav
     class="md-sidenav-left"
     md-component-id="left"
@@ -29,15 +29,15 @@
       </md-button>
     </md-content>
 
-  </md-sidenav>
+    </md-sidenav>
 
-  <md-content flex layout-padding style="height: 500px;" scroll-glue>
-    <md-list flex >
-      <md-list-item ng-repeat="packet in aprsEngine.rawPackets()">
-        {{packet | toTNC2form}}
-      </md-list-item>
-    </md-list>
-  </md-content>
-</div>
+    <md-content flex scroll-glue>
+      <md-list flex >
+        <md-list-item ng-repeat="packet in aprsEngine.rawPackets()">
+          {{packet | toTNC2form}}
+        </md-list-item>
+      </md-list>
+    </md-content>
+  </div>
 </body>
 </html>

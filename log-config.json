@@ -10,7 +10,7 @@
     ],
     "levels": {
         "[all]": "DEBUG",
-        "main": "INFO",
+        "main": "DEBUG",
         "tnc": "DEBUG"
     }
 }
