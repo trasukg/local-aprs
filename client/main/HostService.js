@@ -29,7 +29,7 @@ or broken,
 and then notifies on every packet received.
 */
 
-var HostService=function($rootScope, $location) {
+var HostService=function($location) {
   EventEmitter.apply(this);
   /* Create an endpoint based on the url in the location bar. */
   var wsUrl="ws://" + $location.host() + ":" + $location.port() + "/ws";
@@ -37,40 +37,22 @@ var HostService=function($rootScope, $location) {
 
   var self=this;
   self.requestId=1;
-  self.$rootScope=$rootScope;
+
   self.endpoint=new WebSocketAprsDataEndpoint(wsUrl);
   self.endpoint.on('connect', function(connection) {
     self.isConnected=true;
-    self.emitInRootScope('connected');
+    self.emit('connected');
     connection.on('disconnect', function() {
-      self.emitInRootScope('disconnected');
+      self.emit('disconnected');
     });
   });
   self.endpoint.on('aprsData', function(data) {
-    self.emitInRootScope('aprsData', data);
+    self.emit('aprsData', data);
   });
   self.endpoint.enable();
 
-  self.emitInRootScope=function(eventType, data) {
-    self.$rootScope.$apply(function() {
-      self.emit(eventType, data);
-    });
-  };
-
   self.request=function(request) {
-    /* Pass it on to the endpoint. */
-    /* Need to make sure the response is done in an apply()... */
-    var promise=new Promise(function(resolve, reject) {
-      self.endpoint.request(request)
-      .then(function(response) {
-        self.$rootScope.$apply(function() {resolve(response)});
-      })
-      .catch(function(e) {
-        self.$rootScope.$apply(function() {reject(e)})
-      });
-    });
-
-    return promise;
+    return self.endpoint.request(request);
   };
 };
 

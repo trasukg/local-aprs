@@ -20,6 +20,11 @@ under the License.
 module.exports=function($scope, $mdSidenav, aprsEngine) {
   /* All data handling, etc, is in the packet engine. */
   $scope.aprsEngine=aprsEngine;
+  /* Add an update handler to the aprsEngine, so we update the display when
+  things happen. */
+  aprsEngine.on('update', function() {
+    $scope.$apply();
+  });
 
   /* Events may run in other context, so preserve 'this'. */
   var self=this;

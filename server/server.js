@@ -146,6 +146,9 @@ function incomingPacketsGoToStorage(ctx) {
   });
 }
 
+/** Note to self:  In the fullness of time, we will switch to just having an
+instance of the AprsEngine here, so it won't be cut/pasted code so much.
+*/
 var EXPIRE_INTERVAL=ctx.config.standardPacketMinutesToLive*60*1000;
 
 function storedPacketsExpireAfterSomeTime(ctx) {
