@@ -24,13 +24,18 @@ the various views want to present.
 
 var EventEmitter=require('events');
 var util=require('util');
+var Deduplicator=require('./Deduplicator');
 
 var AprsEngine=function(hostService) {
   var self=this;
   EventEmitter.apply(self);
 
   var connected=false;
+
+  // Raw packets, not deduplicated, in order of receipt.
   var rawPackets=[];
+
+  var deduplicator=new Deduplicator();
 
   var processPacketWithoutUpdate=function(packet) {
     /* Note to self! Need to de-dupe here... */
@@ -39,7 +44,12 @@ var AprsEngine=function(hostService) {
     if (! (packet.receivedAt instanceof Date)) {
       packet.receivedAt=new Date(packet.receivedAt);
     }
+    deduplicator.processPacket(packet);
     self.lastServerTime=Math.max(self.lastServerTime, packet.receivedAt.getTime());
+  };
+
+  self.deduplicatedPackets=function() {
+    return deduplicator.deduplicatedPackets;
   };
 
   var processPacket=function(packet) {
@@ -66,9 +76,12 @@ var AprsEngine=function(hostService) {
     hostService.request({ command: "config?"}).then(function(response) {
       self.config=response.config;
       self.emit('updateConfig');
-    });
+    })
     /* Request the server's cached packets. */
-    hostService.request({ command: "packets?"}).then(function(response) {
+    .then(function() {
+      return hostService.request({ command: "packets?"});
+    })
+    .then(function(response) {
       //console.log("in hostService.onConnected, packets=" + JSON.stringify(response.packets));
       console.log("Got a new set of packets... Processing...");
       clearPackets();
@@ -89,12 +102,14 @@ var AprsEngine=function(hostService) {
   hostService.on('aprsData', function(packet) {
     console.log('got packet' + packet);
     processPacket(packet);
+    calculateSummaries();
     self.emit('update');
   });
 
   var clearPackets=function() {
     rawPackets=[];
     self.lastServerTime=0;
+    deduplicator.clear();
   };
 
   var expireInterval=function() {
@@ -105,12 +120,7 @@ var AprsEngine=function(hostService) {
     }
   };
 
-  var expirePackets=function() {
-    var expiredCount=0;
-    var now=self.lastServerTime;
-    var expiryTime=now - expireInterval();
-    console.log("lastServerTime is " + new Date(now) + ", expiryTime is "
-      + new Date(expiryTime));
+  var expireRawPackets=function(expiryTime) {
     var newPackets=rawPackets.filter(function(p) {
       //console.log("   " + p.receivedAt.getTime() + " " + expiryTime);
       return (p.receivedAt.getTime() >= expiryTime);;
@@ -122,6 +132,20 @@ var AprsEngine=function(hostService) {
     //   packets.shift();
     // }
     console.log("Expired " + expiredCount + " packets.");
+  };
+
+  var expireDeduplicatedPackets=function(expiryTime) {
+    deduplicator.expirePacketsBefore(expiryTime);
+  };
+  
+  var expirePackets=function() {
+    var expiredCount=0;
+    var now=self.lastServerTime;
+    var expiryTime=now - expireInterval();
+    console.log("lastServerTime is " + new Date(now) + ", expiryTime is "
+      + new Date(expiryTime));
+    expireRawPackets(expiryTime);
+    expireDeduplicatedPackets(expiryTime);
   }
   setInterval(expirePackets,5000);
 

@@ -25,11 +25,13 @@ require('angular-material');
 require('angular-animate');
 require('angular-aria');
 require('angularjs-scroll-glue');
+require('@uirouter/angularjs');
 
 /* Define the module once and only once... */
 var app = angular.module('local_aprs_client',
   [ 'ngMaterial',
-    'luegg.directives']);
+    'luegg.directives',
+    'ui.router']);
 
 
 /* App modules */
@@ -46,4 +48,24 @@ angular
 
     let body = document.getElementsByTagName("body")[0];
     angular.bootstrap( body, [ 'local_aprs_client' ]);
-  });
+});
+
+// Setup the ui-router.
+app.config(function($stateProvider) {
+  var rawPacketsState = {
+    name: 'raw',
+    url: '/raw',
+    templateUrl: 'raw-packets.html'
+  };
+
+  var deduplicatedPacketsState = {
+    name: 'deduped',
+    url: '/deduped',
+    templateUrl: 'deduped-packets.html'
+  };
+
+
+  $stateProvider.state(deduplicatedPacketsState);
+  $stateProvider.state(rawPacketsState);
+  console.log("States have been initialized.");
+});

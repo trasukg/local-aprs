@@ -24,20 +24,20 @@
     md-is-locked-open="$mdMedia('gt-sm')"
     md-whiteframe="4">
     <md-content layout-padding>
-      <md-button class="md-primary">
-        Raw Packets ({{aprsEngine.rawPackets().length}})
-      </md-button>
-    </md-content>
-
+      <a ui-sref='raw' ui-sref-active='active'>
+        <md-button class="md-primary">
+          Raw Packets ({{aprsEngine.rawPackets().length}})
+        </md-button>
+      </a>
+      <a ui-sref='deduped' ui-sref-active='active'>
+        <md-button class="md-primary">
+          Deduped Packets ({{aprsEngine.deduplicatedPackets().length}})
+        </md-button>
+      </a>
     </md-sidenav>
 
-    <md-content flex scroll-glue>
-      <md-list flex >
-        <md-list-item ng-repeat="packet in aprsEngine.rawPackets()">
-          {{packet | toTNC2form}}
-        </md-list-item>
-      </md-list>
-    </md-content>
+    <ui-view></ui-view>
+
   </div>
 </body>
 </html>

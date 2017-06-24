@@ -1,0 +1,7 @@
+<md-content flex scroll-glue>
+  <md-list flex >
+    <md-list-item ng-repeat="packet in aprsEngine.deduplicatedPackets()">
+      {{packet | toTNC2form}}
+    </md-list-item>
+  </md-list>
+</md-content>
