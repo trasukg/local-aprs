@@ -5,9 +5,10 @@
   <title>Local APRS</title>
   <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" />
   <link rel="stylesheet" href="/css/angular-material.css">
+  <link rel="stylesheet" href="/css/local-aprs.css">
   <script src='/app.js'></script>
 </head>
-<body layout=column ng-controller="AppController as app" >
+<body flex layout=column ng-controller="AppController as app" >
   <!-- "App Bar" -->
   <md-toolbar layout="row" class="md-toolbar-tools">
     <md-button class="menu md-icon-button" hide-gt-sm ng-click="app.toggleList()" aria-label="Show User List">
@@ -17,27 +18,30 @@
   </md-toolbar>
 
   <!-- Main content area and side nav. -->
-  <div layout="row" style="height: 500px;">
-    <md-sidenav
-    class="md-sidenav-left"
-    md-component-id="left"
-    md-is-locked-open="$mdMedia('gt-sm')"
-    md-whiteframe="4">
-    <md-content layout-padding>
-      <a ui-sref='raw' ui-sref-active='active'>
-        <md-button class="md-primary">
-          Raw Packets ({{aprsEngine.rawPackets().length}})
-        </md-button>
-      </a>
-      <a ui-sref='deduped' ui-sref-active='active'>
-        <md-button class="md-primary">
-          Deduped Packets ({{aprsEngine.deduplicatedPackets().length}})
-        </md-button>
-      </a>
-    </md-sidenav>
-
-    <ui-view></ui-view>
-
+  <div flex layout="row">
+    <div layout=column>
+      <md-sidenav
+        class="md-sidenav-left"
+        md-component-id="left"
+        md-is-locked-open="$mdMedia('gt-sm')"
+        md-whiteframe="4">
+        <a ui-sref='deduped' ui-sref-active='active'>
+          <md-button class="md-primary">
+            Packets ({{aprsEngine.deduplicatedPackets().length}})
+          </md-button>
+        </a>
+        <a ui-sref='raw' ui-sref-active='active'>
+          <md-button class="md-primary">
+            Raw Packets ({{aprsEngine.rawPackets().length}})
+          </md-button>
+        </a>
+      </md-sidenav>
+    </div>
+    <div layout=column flex>
+      <md-content scroll-glue>
+        <ui-view></ui-view>
+      </md-content>
+    </div>
   </div>
 </body>
 </html>

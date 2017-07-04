@@ -1,3 +1,4 @@
+
 /*
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
@@ -17,14 +18,10 @@ specific language governing permissions and limitations
 under the License.
 */
 
-/* This is the main entry point and setup file for the client application.
-*/
-'use strict';
-var app = require('angular').module('local_aprs_client');
+var ax25utils=require('utils-for-aprs').ax25utils;
 
-app.service('hostService', require('./HostService'));
-app.service('aprsEngine', require('./AprsEngine'));
-app.controller('AppController', require('./AppController'));
-app.filter('toTNC2form', require('./toTNC2FormFilter'));
-app.filter('ssidForm', require('./ssidFormFilter'));
-app.filter('formatRoute', require('./routeFormatFilter'));
+module.exports=function() {
+  return function(address) {
+    return ax25utils.addressToString(address);
+  };
+};

@@ -56,7 +56,7 @@ var Deduplicator = function() {
       packet.receptions=[ packet ];
     } else {
       var originalPacket=dedupeIndex[key];
-      originalPacket.receptions.push[packet];
+      originalPacket.receptions.push(packet);
     }
   };
 
