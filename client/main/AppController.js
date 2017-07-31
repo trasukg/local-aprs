@@ -26,8 +26,6 @@ module.exports=function($scope, $mdSidenav, aprsEngine) {
     $scope.$apply();
   });
 
-  /* Events may run in other context, so preserve 'this'. */
-  var self=this;
   /* Display the left side navigation menu. */
   this.toggleList=function() {
     $mdSidenav('left').toggle();

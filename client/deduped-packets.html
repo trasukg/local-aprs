@@ -19,7 +19,7 @@ under the License.
 <md-list>
   <md-list-item ng-repeat="packet in aprsEngine.deduplicatedPackets()">
     <div class='md-list-item-text'>
-      <p>{{packet.source | ssidForm}}</p>
+      <p>{{packet.receivedAt | date : 'hh:mm:ss' }} {{packet.source | ssidForm}}</p>
       <p>{{packet.info}}</p>
       <p class=aprs-route>
         <div class=aprs-route-segment ng-repeat="reception in packet.receptions">

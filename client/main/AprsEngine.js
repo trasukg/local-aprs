@@ -37,6 +37,12 @@ var AprsEngine=function(hostService) {
 
   var deduplicator=new Deduplicator();
 
+  var clearPackets=function() {
+    rawPackets=[];
+    self.lastServerTime=0;
+    deduplicator.clear();
+  };
+
   var processPacketWithoutUpdate=function(packet) {
     /* Note to self! Need to de-dupe here... */
     rawPackets.push(packet);
@@ -47,6 +53,12 @@ var AprsEngine=function(hostService) {
     deduplicator.processPacket(packet);
     self.lastServerTime=Math.max(self.lastServerTime, packet.receivedAt.getTime());
   };
+
+  /** Calculate the packet summaries, station lists, etc.
+  */
+  var calculateSummaries=function() {
+
+  }
 
   self.deduplicatedPackets=function() {
     return deduplicator.deduplicatedPackets;
@@ -82,14 +94,11 @@ var AprsEngine=function(hostService) {
       return hostService.request({ command: "packets?"});
     })
     .then(function(response) {
-      //console.log("in hostService.onConnected, packets=" + JSON.stringify(response.packets));
-      console.log("Got a new set of packets... Processing...");
       clearPackets();
       response.packets.forEach(function(item) {
         processPacketWithoutUpdate(item);
       });
       calculateSummaries();
-      console.log('   ...done');
       self.emit('update');
     });
   });
@@ -100,17 +109,10 @@ var AprsEngine=function(hostService) {
   });
 
   hostService.on('aprsData', function(packet) {
-    console.log('got packet' + packet);
     processPacket(packet);
     calculateSummaries();
     self.emit('update');
   });
-
-  var clearPackets=function() {
-    rawPackets=[];
-    self.lastServerTime=0;
-    deduplicator.clear();
-  };
 
   var expireInterval=function() {
     if (self.config && self.config.standardPacketMinutesToLive) {
@@ -122,38 +124,23 @@ var AprsEngine=function(hostService) {
 
   var expireRawPackets=function(expiryTime) {
     var newPackets=rawPackets.filter(function(p) {
-      //console.log("   " + p.receivedAt.getTime() + " " + expiryTime);
       return (p.receivedAt.getTime() >= expiryTime);;
     });
-    expiredCount=rawPackets.length-newPackets.length;
     rawPackets=newPackets;
-    // while(packets.length>0 && packets[0].receivedAt.getTime() < expiryTime) {
-    //   expiredCount++;
-    //   packets.shift();
-    // }
-    console.log("Expired " + expiredCount + " packets.");
   };
 
   var expireDeduplicatedPackets=function(expiryTime) {
     deduplicator.expirePacketsBefore(expiryTime);
   };
-  
+
   var expirePackets=function() {
-    var expiredCount=0;
     var now=self.lastServerTime;
     var expiryTime=now - expireInterval();
-    console.log("lastServerTime is " + new Date(now) + ", expiryTime is "
-      + new Date(expiryTime));
     expireRawPackets(expiryTime);
     expireDeduplicatedPackets(expiryTime);
   }
   setInterval(expirePackets,5000);
 
-  /** Calculate the packet summaries, station lists, etc.
-  */
-  var calculateSummaries=function() {
-
-  }
 };
 
 util.inherits(AprsEngine, EventEmitter);

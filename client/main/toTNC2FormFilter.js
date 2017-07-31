@@ -25,7 +25,7 @@ module.exports=function() {
     return "[" + frame.receivedAt + "] " + ax25utils.addressToString(frame.source) +
       '->' + ax25utils.addressToString(frame.destination) +
       ' (' + ax25utils.repeaterPathToString(frame.repeaterPath) + ')' +
-      ((frame.forwardingSource!=undefined)?(
+      ((frame.forwardingSource!==undefined)?(
         " via " + ax25utils.addressToString(frame.forwardingSource) +
         '->' + ax25utils.addressToString(frame.forwardingDestination) +
         ' (' + ax25utils.repeaterPathToString(frame.forwardingRepeaterPath) + ')')

@@ -6,3 +6,4 @@ node_modules/**
 nohup.out
 /built-web
 /built-web/**
+.scannerwork

@@ -20,7 +20,7 @@ under the License.
 var ax25utils=require('utils-for-aprs').ax25utils;
 
 var Deduplicator = function() {
-  var depupeIndex=new Map();
+  this.depupeIndex=new Map();
 
   // This array holds the deduplicated packets in order of first receipt, for
   // display.
@@ -30,16 +30,16 @@ var Deduplicator = function() {
     /* Index to deduplicated packet.  Key is sender + message.  Note that the
     server has already interpreted the third-party header if there is one.
     */
-    dedupeIndex=new Map();
+    this.dedupeIndex=new Map();
   };
 
   this.clear();
 
   this.processPacket=function(packet) {
     var key=ax25utils.addressToString(packet.source).concat(packet.info);
-    if (dedupeIndex[key] == undefined) {
+    if (this.dedupeIndex[key] === undefined) {
       // Create a new packet record for this key.
-      dedupeIndex[key]=packet;
+      this.dedupeIndex[key]=packet;
       // Add the packet to the deduplicated packets.
       this.deduplicatedPackets.push(packet);
       /* Alert!!!!  Danger, Will Robinson!
@@ -55,23 +55,24 @@ var Deduplicator = function() {
       */
       packet.receptions=[ packet ];
     } else {
-      var originalPacket=dedupeIndex[key];
+      var originalPacket=this.dedupeIndex[key];
       originalPacket.receptions.push(packet);
     }
   };
 
   this.expirePacketsBefore=function(expiryTime) {
-    var filter=(function(p) {
-      //console.log("   " + p.receivedAt.getTime() + " " + expiryTime);
+    const filter=(function(p) {
       return (p.receivedAt.getTime() >= expiryTime);;
     });
-    newDeduplicatedPackets=[];
-    for(var key in dedupeIndex){
-      var packet=dedupeIndex[key];
-      if (!filter(packet)) {
-        dedupeIndex.delete(key);
-      } else {
-        newDeduplicatedPackets.push(packet);
+    const newDeduplicatedPackets=[];
+    for(var key in this.dedupeIndex){
+      if (this.dedupeIndex.hasOwnProperty(key)) {
+        var packet=this.dedupeIndex[key];
+        if (!filter(packet)) {
+          this.dedupeIndex.delete(key);
+        } else {
+          newDeduplicatedPackets.push(packet);
+        }
       }
     }
     this.deduplicatedPackets=newDeduplicatedPackets;

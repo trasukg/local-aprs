@@ -22,11 +22,11 @@ var ax25utils=require('utils-for-aprs').ax25utils;
 
 module.exports=function() {
   return function(frame) {
-    if (frame.repeaterPath == undefined) {
+    if (frame.repeaterPath === undefined) {
       return "Direct";
     }
     return ax25utils.repeaterPathToString(frame.repeaterPath) +
-      ((frame.forwardingSource!=undefined)?(
+      ((frame.forwardingSource!==undefined)?(
         " via " + ax25utils.addressToString(frame.forwardingSource) +
         '->' + ax25utils.addressToString(frame.forwardingDestination) +
         ' (' + ax25utils.repeaterPathToString(frame.forwardingRepeaterPath) + ')')

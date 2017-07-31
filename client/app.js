@@ -16,7 +16,6 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 */
-'use strict';
 
 require('angular');
 require('angular-material');
@@ -37,19 +36,6 @@ var app = angular.module('local_aprs_client',
 /* App modules */
 require('./main');
 
-/* Manually bootstrap the app. */
-angular
-  .element( document )
-  .ready( function() {
-    app
-      .run(()=>{
-        console.log("Running the 'local_aprs_client'.");
-      });
-
-    let body = document.getElementsByTagName("body")[0];
-    angular.bootstrap( body, [ 'local_aprs_client' ]);
-});
-
 // Setup the ui-router.
 app.config(function($stateProvider) {
   var rawPacketsState = {
@@ -67,5 +53,12 @@ app.config(function($stateProvider) {
 
   $stateProvider.state(deduplicatedPacketsState);
   $stateProvider.state(rawPacketsState);
-  console.log("States have been initialized.");
+});
+
+/* Manually bootstrap the app. */
+angular
+  .element(document)
+  .ready(function() {
+    const body = document.getElementsByTagName("body")[0];
+    angular.bootstrap( body, [ 'local_aprs_client' ]);
 });
