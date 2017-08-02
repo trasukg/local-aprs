@@ -26,6 +26,13 @@ var EventEmitter=require('events');
 var util=require('util');
 var Deduplicator=require('./Deduplicator');
 
+var ensurePacketReceivedAtIsDate=function(packet) {
+  /* Convert the receivedAt value to a date if necessary. */
+  if (! (packet.receivedAt instanceof Date)) {
+    packet.receivedAt=new Date(packet.receivedAt);
+  }
+
+}
 var AprsEngine=function(hostService) {
   var self=this;
   EventEmitter.apply(self);
@@ -44,12 +51,8 @@ var AprsEngine=function(hostService) {
   };
 
   var processPacketWithoutUpdate=function(packet) {
-    /* Note to self! Need to de-dupe here... */
+    ensurePacketReceivedAtIsDate(packet);
     rawPackets.push(packet);
-    /* Convert the receivedAt value to a date if necessary. */
-    if (! (packet.receivedAt instanceof Date)) {
-      packet.receivedAt=new Date(packet.receivedAt);
-    }
     deduplicator.processPacket(packet);
     self.lastServerTime=Math.max(self.lastServerTime, packet.receivedAt.getTime());
   };

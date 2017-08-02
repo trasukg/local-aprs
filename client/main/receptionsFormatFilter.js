@@ -1,3 +1,4 @@
+
 /*
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
@@ -17,15 +18,25 @@ specific language governing permissions and limitations
 under the License.
 */
 
-/* This is the main entry point and setup file for the client application.
-*/
-'use strict';
-var app = require('angular').module('local_aprs_client');
+var ax25utils=require('utils-for-aprs').ax25utils;
 
-app.service('hostService', require('./HostService'));
-app.service('aprsEngine', require('./AprsEngine'));
-app.controller('AppController', require('./AppController'));
-app.filter('toTNC2form', require('./toTNC2FormFilter'));
-app.filter('ssidForm', require('./ssidFormFilter'));
-app.filter('formatRoute', require('./routeFormatFilter'));
-app.filter('formatReceptions', require('./receptionsFormatFilter'));
+module.exports=function() {
+  return function(receptions) {
+    var ret="";
+    var first=true;
+    for (var i in receptions) {
+      var frame=receptions[i];
+      if (frame.repeaterPath === undefined) {
+        ret=ret + "(Direct)";
+      } else {
+        ret=ret + "(" + ax25utils.repeaterPathToString(frame.repeaterPath) +
+        ((frame.forwardingSource!==undefined)?(
+          " via " + ax25utils.addressToString(frame.forwardingSource) +
+          '->' + ax25utils.addressToString(frame.forwardingDestination) +
+          ' (' + ax25utils.repeaterPathToString(frame.forwardingRepeaterPath) + ')')
+          : '') + ")";
+      }
+    }
+    return ret;
+  };
+};

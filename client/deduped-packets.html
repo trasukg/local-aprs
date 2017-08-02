@@ -16,15 +16,13 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<md-list>
-  <md-list-item ng-repeat="packet in aprsEngine.deduplicatedPackets()">
-    <div class='md-list-item-text'>
-      <p>{{packet.receivedAt | date : 'hh:mm:ss' }} {{packet.source | ssidForm}}</p>
-      <p>{{packet.info}}</p>
-      <p class=aprs-route>
-        <div class=aprs-route-segment ng-repeat="reception in packet.receptions">
-          ({{reception | formatRoute}})
-        </div>
+<md-list class="md-dense">
+  <md-list-item class="md-3-line" ng-repeat="packet in aprsEngine.deduplicatedPackets()">
+    <div class='md-list-item-text' layout='column'>
+      <h3>{{packet.receivedAt | date : 'hh:mm:ss' }} {{packet.source | ssidForm}}</h3>
+      <h4>{{packet.info}}</h4>
+      <p>
+          {{packet.receptions | formatReceptions}}
       </p>
     </div>
     <md-divider ng-if="!$last"></md-divider>

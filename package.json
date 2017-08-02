@@ -28,6 +28,7 @@
     "express-hbs": "^0.8.4",
     "express-ws": "^3.0.0",
     "log4js": "^0.6.33",
+    "mdi": "^2.0.46",
     "serialport": "^4.0.7",
     "serve-static": "^1.10.2",
     "utils-for-aprs": "^2.1.0"
