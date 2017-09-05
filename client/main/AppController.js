@@ -27,7 +27,7 @@ module.exports=function($scope, $mdSidenav, aprsEngine) {
   });
 
   /* Display the left side navigation menu. */
-  this.toggleList=function() {
+  this.toggleLeftNav=function() {
     $mdSidenav('left').toggle();
   }
 
