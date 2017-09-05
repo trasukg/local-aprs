@@ -9,9 +9,9 @@
         }
     ],
     "levels": {
-        "[all]": "DEBUG",
-        "main": "DEBUG",
-        "incoming": "DEBUG",
-        "websockets": "DEBUG"
+        "[all]": "INFO",
+        "main": "INFO",
+        "incoming": "INFO",
+        "websockets": "INFO"
     }
 }
