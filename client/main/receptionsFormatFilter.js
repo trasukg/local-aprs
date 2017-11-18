@@ -23,18 +23,19 @@ var ax25utils=require('utils-for-aprs').ax25utils;
 module.exports=function() {
   return function(receptions) {
     var ret="";
-    var first=true;
     for (var i in receptions) {
-      var frame=receptions[i];
-      if (frame.repeaterPath === undefined) {
-        ret=ret + "(Direct)";
-      } else {
-        ret=ret + "(" + ax25utils.repeaterPathToString(frame.repeaterPath) +
-        ((frame.forwardingSource!==undefined)?(
-          " via " + ax25utils.addressToString(frame.forwardingSource) +
-          '->' + ax25utils.addressToString(frame.forwardingDestination) +
-          ' (' + ax25utils.repeaterPathToString(frame.forwardingRepeaterPath) + ')')
-          : '') + ")";
+      if(receptions.hasOwnProperty(i)) {
+        var frame=receptions[i];
+        if (frame.repeaterPath === undefined) {
+          ret=ret + "(Direct)";
+        } else {
+          ret=ret + "(" + ax25utils.repeaterPathToString(frame.repeaterPath) +
+          ((frame.forwardingSource!==undefined)?(
+            " via " + ax25utils.addressToString(frame.forwardingSource) +
+            '->' + ax25utils.addressToString(frame.forwardingDestination) +
+            ' (' + ax25utils.repeaterPathToString(frame.forwardingRepeaterPath) + ')')
+            : '') + ")";
+        }
       }
     }
     return ret;
