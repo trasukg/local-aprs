@@ -22,6 +22,7 @@ client application can authenticate itself and get an access token.
 */
 
 var log4js=require('log4js');
+var logger=log4js.getLogger('main');
 var express=require('express');
 var hbs=require('express-hbs');
 var aprsUtils=require("utils-for-aprs");
@@ -45,8 +46,9 @@ var theresAWebServer=function(ctx) {
   }));
   ctx.app.set('view engine', 'hbs');
   ctx.app.set('views', path.join(__dirname, 'views'));
-  console.log("static files in '" + path.join(process.cwd(),"built-web") + "'")
-  ctx.app.use(express.static( path.join(process.cwd(),"built-web"),
+  const serverHomePath=path.join(process.cwd(),"dist")
+  console.log("static files in '" + serverHomePath + "'")
+  ctx.app.use(express.static( serverHomePath,
     { dotfiles: 'deny', index: 'index.html'}));
   ctx.app.get('/', function(req,res) {
     res.redirect('index.html');
@@ -54,7 +56,7 @@ var theresAWebServer=function(ctx) {
   ctx.http.listen(3000, function(){
     console.log('listening on *:3000');
   });
-}
+};
 
 var theWebServerHandlesErrors=function(ctx) {
   var errorHandler=function(err, req, res, next) {
@@ -62,7 +64,7 @@ var theWebServerHandlesErrors=function(ctx) {
     res.status(500).json({ error: err })
   };
   ctx.app.use(errorHandler)
-}
+};
 
 function clientsCanDownloadThePacketStoreThroughRESTfulAPI(ctx) {
   var router=express.Router();
@@ -70,19 +72,34 @@ function clientsCanDownloadThePacketStoreThroughRESTfulAPI(ctx) {
     res.json(ctx.storedPackets);
   });
   ctx.app.use("/api", router);
-}
+};
 
 var clientsCanSeeThePackets=function(ctx) {
   ctx.app.get("/s/index.html", function(req, res) {
     res.render('index', { packets: ctx.storedPackets });
   });
-}
+};
+
+const allOtherPathsGotoIndexDotHtml = function(ctx) {
+  // Catch all other routes and return the index file
+  ctx.app.get('*', (req, res) => {
+    res.sendFile(path.join(serverHomePath,"index.html"));
+  });
+};
+
+const iconFontsAreAvailable=function(ctx) {
+  const iconPath=path.join(process.cwd(),'node_modules', 'material-design-icons',
+    'iconfont');
+  ctx.app.use('/iconfont', express.static( iconPath ));
+};
 
 var setupWebServer=function(ctx) {
   theresAWebServer(ctx);
   clientsCanDownloadThePacketStoreThroughRESTfulAPI(ctx);
   clientsCanSeeThePackets(ctx);
+  iconFontsAreAvailable(ctx);
+  allOtherPathsGotoIndexDotHtml(ctx);
   theWebServerHandlesErrors(ctx);
-}
+};
 
 module.exports=setupWebServer;
