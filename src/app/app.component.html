@@ -1,6 +1,24 @@
 <!--The content below is only a placeholder and can be replaced.-->
-Hi there!
+<div [class.app-is-mobile]='mobileQuery.matches' class='app-container'>
 
-<mat-toolbar>
-  <h1>Local-APRS</h1>
-</mat-toolbar>
+  <mat-toolbar color='primary' class='app-toolbar'>
+    <button mat-icon-button (click)="snav.toggle()">
+      <mat-icon>menu</mat-icon>
+    </button>
+    <h1 class="app-name">Local-APRS</h1>
+  </mat-toolbar>
+  <mat-sidenav-container class="app-sidenav-container"
+  [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
+    <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'"
+    [fixedInViewport]="mobileQuery.matches" fixedTopGap="56">
+      <mat-list>
+        <mat-list-item><a mat-button>Packets</a></mat-list-item>
+        <mat-list-item><a mat-button>Raw Packets</a></mat-list-item>
+      </mat-list>
+    </mat-sidenav>
+
+    <mat-sidenav-content>
+      Here's content.
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</div>
