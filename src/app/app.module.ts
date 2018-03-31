@@ -4,6 +4,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppComponent } from './app.component';
 
 import {CdkTableModule} from '@angular/cdk/table';
+import {Location, LocationStrategy, HashLocationStrategy} from '@angular/common';
 
 import {
   MatAutocompleteModule,
@@ -39,6 +40,9 @@ import {
   MatToolbarModule,
   MatTooltipModule,
 } from '@angular/material';
+
+import {HostService} from './host.service';
+import {AprsSituationService} from './aprs-situation.service';
 
 @NgModule({
   exports: [
@@ -88,7 +92,15 @@ export class MaterialModule {};
     BrowserAnimationsModule,
     MaterialModule
   ],
-  providers: [],
+  providers: [
+    AprsSituationService,
+    HostService,
+    [Location, {provide: LocationStrategy, useClass: HashLocationStrategy}]
+  ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+  constructor(hostService: HostService) {
+    console.log("Constructor for AppModule was called.");
+  }
+}
