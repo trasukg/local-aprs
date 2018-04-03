@@ -22,7 +22,7 @@ under the License.
 var setupIncomingPacketSupport=require("./setupIncomingPacketSupport");
 var setupWebServer=require("./setupWebServer");
 var setupWebSocketSupport=require("./setupWebSocketSupport");
-
+var setupAngularAppFilesSupport=require("./setupAngularAppFilesSupport");
 var log4js=require('log4js');
 var logger=log4js.getLogger('main');
 var process=require('process');
@@ -34,7 +34,10 @@ loggingIsDoneThroughLog4js(ctx);
 
 setupIncomingPacketSupport(ctx);
 setupWebServer(ctx);
+// Note that we have to put web socket path in before the static files, or
+// opening "/ws" will be a file rather than the web socket.
 setupWebSocketSupport(ctx);
+setupAngularAppFilesSupport(ctx);
 
 function loggingIsDoneThroughLog4js() {
   log4js.configure('log-config.json');

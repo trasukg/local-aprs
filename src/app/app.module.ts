@@ -5,87 +5,21 @@ import { AppComponent } from './app.component';
 
 import {CdkTableModule} from '@angular/cdk/table';
 import {Location, LocationStrategy, HashLocationStrategy} from '@angular/common';
+import {MaterialModule} from './material-module';
 
-import {
-  MatAutocompleteModule,
-  MatButtonModule,
-  MatButtonToggleModule,
-  MatCardModule,
-  MatCheckboxModule,
-  MatChipsModule,
-  MatDatepickerModule,
-  MatDialogModule,
-  MatDividerModule,
-  MatExpansionModule,
-  MatGridListModule,
-  MatIconModule,
-  MatInputModule,
-  MatListModule,
-  MatMenuModule,
-  MatNativeDateModule,
-  MatPaginatorModule,
-  MatProgressBarModule,
-  MatProgressSpinnerModule,
-  MatRadioModule,
-  MatRippleModule,
-  MatSelectModule,
-  MatSidenavModule,
-  MatSliderModule,
-  MatSlideToggleModule,
-  MatSnackBarModule,
-  MatSortModule,
-  MatStepperModule,
-  MatTableModule,
-  MatTabsModule,
-  MatToolbarModule,
-  MatTooltipModule,
-} from '@angular/material';
 
 import {HostService} from './host.service';
 import {AprsSituationService} from './aprs-situation.service';
-
-@NgModule({
-  exports: [
-    CdkTableModule,
-    MatAutocompleteModule,
-    MatButtonModule,
-    MatButtonToggleModule,
-    MatCardModule,
-    MatCheckboxModule,
-    MatChipsModule,
-    MatStepperModule,
-    MatDatepickerModule,
-    MatDialogModule,
-    MatDividerModule,
-    MatExpansionModule,
-    MatGridListModule,
-    MatIconModule,
-    MatInputModule,
-    MatListModule,
-    MatMenuModule,
-    MatNativeDateModule,
-    MatPaginatorModule,
-    MatProgressBarModule,
-    MatProgressSpinnerModule,
-    MatRadioModule,
-    MatRippleModule,
-    MatSelectModule,
-    MatSidenavModule,
-    MatSliderModule,
-    MatSlideToggleModule,
-    MatSnackBarModule,
-    MatSortModule,
-    MatTableModule,
-    MatTabsModule,
-    MatToolbarModule,
-    MatTooltipModule,
-  ]
-})
-export class MaterialModule {};
+import { LocalAprsPacketsComponent } from './local-aprs-packets/local-aprs-packets.component';
+import { SsidFormPipe } from './ssid-form.pipe';
+import { FormatReceptionsPipe } from './format-receptions.pipe';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    LocalAprsPacketsComponent,
+    SsidFormPipe,
+    FormatReceptionsPipe
   ],
   imports: [
     BrowserModule,

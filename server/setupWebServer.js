@@ -46,13 +46,6 @@ var theresAWebServer=function(ctx) {
   }));
   ctx.app.set('view engine', 'hbs');
   ctx.app.set('views', path.join(__dirname, 'views'));
-  const serverHomePath=path.join(process.cwd(),"dist")
-  console.log("static files in '" + serverHomePath + "'")
-  ctx.app.use(express.static( serverHomePath,
-    { dotfiles: 'deny', index: 'index.html'}));
-  ctx.app.get('/', function(req,res) {
-    res.redirect('index.html');
-  });
   ctx.http.listen(3000, function(){
     console.log('listening on *:3000');
   });
@@ -80,13 +73,6 @@ var clientsCanSeeThePackets=function(ctx) {
   });
 };
 
-const allOtherPathsGotoIndexDotHtml = function(ctx) {
-  // Catch all other routes and return the index file
-  ctx.app.get('*', (req, res) => {
-    res.sendFile(path.join(serverHomePath,"index.html"));
-  });
-};
-
 const iconFontsAreAvailable=function(ctx) {
   const iconPath=path.join(process.cwd(),'node_modules', 'material-design-icons',
     'iconfont');
@@ -98,7 +84,6 @@ var setupWebServer=function(ctx) {
   clientsCanDownloadThePacketStoreThroughRESTfulAPI(ctx);
   clientsCanSeeThePackets(ctx);
   iconFontsAreAvailable(ctx);
-  allOtherPathsGotoIndexDotHtml(ctx);
   theWebServerHandlesErrors(ctx);
 };
 

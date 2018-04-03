@@ -10,7 +10,7 @@ export class HostService extends EventEmitter {
   private endpoint: WebSocketAprsDataEndpoint;
   private connected: boolean;
 
-  constructor(location: Location) {
+  constructor() {
     super();
     /* Create an endpoint based on the url in the location bar. */
     var host=window.location.host;
@@ -31,7 +31,7 @@ export class HostService extends EventEmitter {
     self.endpoint.on('aprsData', function(data) {
       self.emit('aprsData', data);
     });
-  self.endpoint.enable();
+    self.endpoint.enable();
 
   }
 
