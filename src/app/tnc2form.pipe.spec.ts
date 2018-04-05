@@ -17,11 +17,11 @@ specific language governing permissions and limitations
 under the License.
 */
 
-import { SsidFormPipe } from './ssid-form.pipe';
+import { Tnc2formPipe } from './tnc2form.pipe';
 
-describe('SsidFormPipe', () => {
+describe('Tnc2formPipe', () => {
   it('create an instance', () => {
-    const pipe = new SsidFormPipe();
+    const pipe = new Tnc2formPipe();
     expect(pipe).toBeTruthy();
   });
 });

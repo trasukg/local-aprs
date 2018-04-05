@@ -17,11 +17,19 @@ specific language governing permissions and limitations
 under the License.
 */
 
-import { SsidFormPipe } from './ssid-form.pipe';
+import { Component, OnInit } from '@angular/core';
+import {AprsSituationService} from '../aprs-situation.service';
 
-describe('SsidFormPipe', () => {
-  it('create an instance', () => {
-    const pipe = new SsidFormPipe();
-    expect(pipe).toBeTruthy();
-  });
-});
+@Component({
+  selector: 'app-raw-packets',
+  templateUrl: './raw-packets.component.html',
+  styleUrls: ['./raw-packets.component.css']
+})
+export class RawPacketsComponent implements OnInit {
+
+  constructor(private aprsSituation: AprsSituationService ) { }
+
+  ngOnInit() {
+  }
+
+}

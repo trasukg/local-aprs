@@ -17,11 +17,23 @@ specific language governing permissions and limitations
 under the License.
 */
 
-import { SsidFormPipe } from './ssid-form.pipe';
+import { Pipe, PipeTransform } from '@angular/core';
+import { ax25utils } from 'utils-for-aprs';
 
-describe('SsidFormPipe', () => {
-  it('create an instance', () => {
-    const pipe = new SsidFormPipe();
-    expect(pipe).toBeTruthy();
-  });
-});
+@Pipe({
+  name: 'tnc2form'
+})
+export class Tnc2formPipe implements PipeTransform {
+
+  transform(frame: any, args?: any): any {
+    return "[" + frame.receivedAt + "] " + ax25utils.addressToString(frame.source) +
+      '->' + ax25utils.addressToString(frame.destination) +
+      ' (' + ax25utils.repeaterPathToString(frame.repeaterPath) + ')' +
+      ((frame.forwardingSource!==undefined)?(
+        " via " + ax25utils.addressToString(frame.forwardingSource) +
+        '->' + ax25utils.addressToString(frame.forwardingDestination) +
+        ' (' + ax25utils.repeaterPathToString(frame.forwardingRepeaterPath) + ')')
+        : '') +
+      frame.info;  }
+
+}

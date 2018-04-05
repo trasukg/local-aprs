@@ -17,11 +17,28 @@ specific language governing permissions and limitations
 under the License.
 */
 
-import { SsidFormPipe } from './ssid-form.pipe';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-describe('SsidFormPipe', () => {
-  it('create an instance', () => {
-    const pipe = new SsidFormPipe();
-    expect(pipe).toBeTruthy();
+import { RawPacketsComponent } from './raw-packets.component';
+
+describe('RawPacketsComponent', () => {
+  let component: RawPacketsComponent;
+  let fixture: ComponentFixture<RawPacketsComponent>;
+
+  beforeEach(async(() => {
+    TestBed.configureTestingModule({
+      declarations: [ RawPacketsComponent ]
+    })
+    .compileComponents();
+  }));
+
+  beforeEach(() => {
+    fixture = TestBed.createComponent(RawPacketsComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
   });
 });
