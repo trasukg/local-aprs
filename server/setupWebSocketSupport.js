@@ -34,6 +34,7 @@ var clientsCanConnectToSockets=function(ctx) {
       handleWSMessage(ctx, ws, msg);
     });
     ws.on('close', function() {
+      logger.debug('Web socket closed by client');
       var index=ctx.clients.indexOf(ws);
       if (index>-1) {
         ctx.clients.splice(index, 1);

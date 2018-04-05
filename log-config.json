@@ -12,6 +12,6 @@
         "[all]": "INFO",
         "main": "INFO",
         "incoming": "INFO",
-        "websockets": "INFO"
+        "websockets": "DEBUG"
     }
 }
