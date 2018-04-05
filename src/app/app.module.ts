@@ -35,10 +35,14 @@ import { SsidFormPipe } from './ssid-form.pipe';
 import { FormatReceptionsPipe } from './format-receptions.pipe';
 import { RawPacketsComponent } from './raw-packets/raw-packets.component';
 import { Tnc2formPipe } from './tnc2form.pipe';
+import { StationsComponent } from './stations/stations.component';
+import { StationDetailComponent } from './station-detail/station-detail.component';
 
 const appRoutes: Routes = [
   { path: 'packets', component: LocalAprsPacketsComponent },
   { path: 'raw-packets', component: RawPacketsComponent },
+  { path: 'stations', component: StationsComponent },
+  { path: 'stations/:stationId', component: StationDetailComponent },
   { path: '',
     redirectTo: '/packets',
     pathMatch: 'full'
@@ -56,7 +60,9 @@ const appRoutes: Routes = [
     SsidFormPipe,
     FormatReceptionsPipe,
     RawPacketsComponent,
-    Tnc2formPipe
+    Tnc2formPipe,
+    StationsComponent,
+    StationDetailComponent
   ],
   imports: [
     RouterModule.forRoot(

@@ -21,6 +21,7 @@ import { Injectable } from '@angular/core';
 import { HostService } from './host.service';
 import { EventEmitter } from 'events';
 import { Deduplicator } from './Deduplicator';
+import { StationProcessor } from './StationProcessor';
 
 @Injectable()
 export class AprsSituationService extends EventEmitter {
@@ -29,7 +30,14 @@ export class AprsSituationService extends EventEmitter {
   // Raw packets, not deduplicated, in order of receipt.
   public rawPackets:any[]=[];
 
+  // Station records, generated from the packets that we have.
+  get stations() {
+    return this.stationProcessor.stations;
+  }
+
   deduplicator:Deduplicator=new Deduplicator();
+
+  private stationProcessor:StationProcessor=new StationProcessor();
 
   config:any;
   lastServerTime:number = 0;
@@ -128,7 +136,11 @@ export class AprsSituationService extends EventEmitter {
   /** Calculate the packet summaries, station lists, etc.
   */
   calculateSummaries() {
-
+    this.stationProcessor.clear();
+    for (let packet of this.deduplicatedPackets()) {
+      this.stationProcessor.processPacket(packet);
+    }
+    console.log("Stations:" + JSON.stringify(this.stations.values()));
   }
 
   ensurePacketReceivedAtIsDate(packet) {
