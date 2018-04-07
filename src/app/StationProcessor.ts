@@ -21,21 +21,21 @@ import {StationRecord} from './StationRecord';
 import {ax25utils} from 'utils-for-aprs';
 
 export class StationProcessor {
-  stations:Map<string, any>;
+  stationsById:Map<string, StationRecord>= new Map();
 
   public clear() {
-    this.stations=new Map();
+    this.stationsById=new Map();
   }
 
   public processPacket(packet:any) {
     var stationId=ax25utils.addressToString(packet.source);
     // Lookup the station object for this packet
-    var stationRecord=this.stations.get(stationId);
+    var stationRecord=this.stationsById.get(stationId);
     // If none, create a new station record and store it.
     if (stationRecord===undefined) {
-      console.log("Creating a new station record for " + stationId);
+      //console.log("Creating a new station record for " + stationId);
       stationRecord=new StationRecord(stationId);
-      this.stations.set(stationId,stationRecord);
+      this.stationsById.set(stationId,stationRecord);
     }
     // Add this packet into the station record.
     stationRecord.processPacket(packet);

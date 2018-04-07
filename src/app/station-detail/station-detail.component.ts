@@ -21,7 +21,7 @@ export class StationDetailComponent implements OnInit {
   ngOnInit() {
     let stationId = this.route.snapshot.paramMap.get('stationId');
 
-    this.station = this.aprsSituation.stations.get(stationId);
+    this.station = this.aprsSituation.stationsById.get(stationId);
   }
 
 }

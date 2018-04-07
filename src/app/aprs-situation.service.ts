@@ -22,6 +22,7 @@ import { HostService } from './host.service';
 import { EventEmitter } from 'events';
 import { Deduplicator } from './Deduplicator';
 import { StationProcessor } from './StationProcessor';
+import { StationRecord } from "./StationRecord";
 
 @Injectable()
 export class AprsSituationService extends EventEmitter {
@@ -31,8 +32,8 @@ export class AprsSituationService extends EventEmitter {
   public rawPackets:any[]=[];
 
   // Station records, generated from the packets that we have.
-  get stations() {
-    return this.stationProcessor.stations;
+  get stationsById():Map<string, StationRecord> {
+    return this.stationProcessor.stationsById;
   }
 
   deduplicator:Deduplicator=new Deduplicator();
@@ -140,7 +141,7 @@ export class AprsSituationService extends EventEmitter {
     for (let packet of this.deduplicatedPackets()) {
       this.stationProcessor.processPacket(packet);
     }
-    console.log("Stations:" + JSON.stringify(this.stations.values()));
+    //console.log("this.stationsById has " + this.stationsById.size + " entries");
   }
 
   ensurePacketReceivedAtIsDate(packet) {

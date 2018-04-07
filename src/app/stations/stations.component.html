@@ -18,13 +18,13 @@ under the License.
 -->
 
   <mat-card
-  *ngFor="let station of aprsSituation.stations.values()">
-    <mat-card-title>{{station.stationId}}</mat-card-title>
+  *ngFor="let stationId of stationIds">
+    <mat-card-title>{{stationId}}</mat-card-title>
     <mat-card-content>
-      Last Heard: {{station.lastHeardAt | date : 'hh:mm:ss' }}<br>
-      Status: {{station.status}}<br>
-      Last comment: {{station.lastComment}}<br>
+      Last Heard: {{stationsById.get(stationId).lastHeardAt | date : 'hh:mm:ss' }}<br>
+      Status: {{stationsById.get(stationId).status}}<br>
+      Last comment: {{stationsById.get(stationId).lastComment}}<br>
     </mat-card-content>
-    <a routerLink="/stations/{{station.stationId}}" mat-raised-button>Details
+    <a routerLink="/stations/{{stationId}}" mat-raised-button>Details
   </a>
   </mat-card>

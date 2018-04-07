@@ -39,9 +39,9 @@ export class Deduplicator {
 
   processPacket(packet) {
     var key=ax25utils.addressToString(packet.source).concat(packet.info);
-    if (this.dedupeIndex[key] === undefined) {
+    if (this.dedupeIndex.get(key) === undefined) {
       // Create a new packet record for this key.
-      this.dedupeIndex[key]=packet;
+      this.dedupeIndex.set(key, packet);
       // Add the packet to the deduplicated packets.
       this.deduplicatedPackets.push(packet);
       /* Alert!!!!  Danger, Will Robinson!
@@ -57,7 +57,7 @@ export class Deduplicator {
       */
       packet.receptions=[ packet ];
     } else {
-      var originalPacket=this.dedupeIndex[key];
+      var originalPacket=this.dedupeIndex.get(key);
       originalPacket.receptions.push(packet);
     }
   };
@@ -68,14 +68,12 @@ export class Deduplicator {
     };
 
     const newDeduplicatedPackets=[];
-    for(var key in this.dedupeIndex){
-      if (this.dedupeIndex.hasOwnProperty(key)) {
-        var packet=this.dedupeIndex[key];
-        if (!filter(packet)) {
-          this.dedupeIndex.delete(key);
-        } else {
-          newDeduplicatedPackets.push(packet);
-        }
+    for(let key of Array.from(this.dedupeIndex.keys())){
+      var packet=this.dedupeIndex.get(key);
+      if (!filter(packet)) {
+        this.dedupeIndex.delete(key);
+      } else {
+        newDeduplicatedPackets.push(packet);
       }
     }
     this.deduplicatedPackets=newDeduplicatedPackets;
