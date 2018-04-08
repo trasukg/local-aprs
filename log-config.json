@@ -1,17 +1,17 @@
 {
-    "appenders": [
-        {
+    "appenders": {
+      "out": {
             "type": "console",
             "layout": {
                 "type": "pattern",
                 "pattern": "%d %p %c - %m"
             }
         }
-    ],
-    "levels": {
-        "[all]": "INFO",
-        "main": "INFO",
-        "incoming": "INFO",
-        "websockets": "DEBUG"
+    },
+    "categories": {
+        "default": { "appenders": ["out"], "level": "INFO" },
+        "main": { "appenders": ["out"], "level": "INFO" },
+        "incoming": { "appenders": ["out"], "level": "INFO" },
+        "websockets": { "appenders": ["out"], "level": "INFO" }
     }
 }
