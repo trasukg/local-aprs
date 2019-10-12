@@ -39,24 +39,27 @@
     "serve-static": "^1.14.1",
     "tslib": "^1.9.0",
     "utils-for-aprs": "^2.2.9",
-    "zone.js": "~0.8.26"
+    "zone.js": "~0.9.1"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "~0.13.0",
-    "@angular/animations": "~7.2.0",
+    "@angular-devkit/build-angular": "~0.803.9",
+    "@angular/animations": "~8.2.10",
     "@angular/cdk": "~8.2.3",
     "@angular/cli": "~8.3.9",
-    "@angular/common": "~7.2.0",
-    "@angular/compiler": "~7.2.0",
-    "@angular/compiler-cli": "~7.2.0",
+    "@angular/common": "~8.2.10",
+    "@angular/compiler": "~8.2.10",
+    "@angular/compiler-cli": "~8.2.10",
     "@angular/core": "~8.2.10",
+    "@angular/forms": "^8.2.10",
     "@angular/material": "^8.2.3",
+    "@angular/platform-browser": "^8.2.10",
+    "@angular/platform-browser-dynamic": "^8.2.10",
     "@angular/router": "~8.2.0",
     "@types/events": "^1.2.0",
     "@types/jasmine": "~2.8.8",
     "@types/jasminewd2": "^2.0.8",
     "@types/node": "~8.9.4",
-    "codelyzer": "~4.5.0",
+    "codelyzer": "~5.1.2",
     "jasmine-core": "~2.99.1",
     "jasmine-spec-reporter": "~4.2.1",
     "karma": "^4.3.0",
@@ -68,6 +71,6 @@
     "tar": "^5.0.5",
     "ts-node": "~7.0.0",
     "tslint": "~5.11.0",
-    "typescript": "~3.2.2"
+    "typescript": "~3.5.3"
   }
 }
