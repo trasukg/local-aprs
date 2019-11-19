@@ -58,9 +58,11 @@ export class AprsSituationService extends EventEmitter {
     console.log("Beginning aprs-situation-service setup...")
     /* This could reasonable be an 'effect' rather than being implemented here. */
     hostService.on('connected', function() {
+      console.log("Got connected event.");
       self.connected=true;
       // Dispatch a 'connected' event.
       store.dispatch(AprsSituationActions.connected());
+      console.log("Dispatched connected action");
       /* Clear the stored packets. */
       /* Request the configuration. */
       console.log("Requesting the config")
@@ -103,8 +105,12 @@ export class AprsSituationService extends EventEmitter {
       // self.emit('update');
 
       // Reimplement to dispatch a packet-received action.
+      console.log("dispatching receivedPacket event");
       store.dispatch(AprsSituationActions.receivedPacket({packet: packet}));
     });
+
+    console.log("Enabling the hostService");
+    hostService.enable();
 
     var expireInterval=function() {
       if (self.config && self.config.standardPacketMinutesToLive) {

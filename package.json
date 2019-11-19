@@ -24,6 +24,7 @@
   "dependencies": {
     "@ngrx/effects": "^8.4.0",
     "@ngrx/store": "^8.4.0",
+    "@ngrx/store-devtools": "^8.4.0",
     "bluebird": "^3.7.0",
     "body-parser": "^1.19.0",
     "core-js": "^2.6.9",

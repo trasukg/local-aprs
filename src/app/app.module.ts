@@ -27,7 +27,6 @@ import {CdkTableModule} from '@angular/cdk/table';
 import {Location, LocationStrategy, HashLocationStrategy} from '@angular/common';
 import {MaterialModule} from './material-module';
 
-
 import {HostService} from './host.service';
 import {AprsSituationService} from './aprs-situation.service';
 import { LocalAprsPacketsComponent } from './local-aprs-packets/local-aprs-packets.component';
@@ -44,6 +43,8 @@ import * as fromAprsSituation from './aprs-situation/aprs-situation.reducer';
 import * as fromHostConfig from './host-config/host-config.reducer';
 import { HostConfigEffects } from './host-config/host-config.effects';
 import { AppEffects } from './app.effects';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { environment } from '../environments/environment';
 
 const appRoutes: Routes = [
   { path: 'packets', component: LocalAprsPacketsComponent },
@@ -94,7 +95,8 @@ const appRoutes: Routes = [
     EffectsModule.forFeature([AprsSituationEffects, HostConfigEffects]),
     StoreModule.forFeature(fromAprsSituation.aprsSituationFeatureKey, fromAprsSituation.reducer),
     StoreModule.forFeature(fromHostConfig.hostConfigFeatureKey, fromHostConfig.reducer),
-    EffectsModule.forRoot([AppEffects])
+    EffectsModule.forRoot([AppEffects]),
+    StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production })
   ],
   providers: [
     AprsSituationService,

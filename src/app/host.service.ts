@@ -44,6 +44,7 @@ export class HostService extends EventEmitter {
     self.endpoint.on('connect', function(connection) {
       self.connected=true;
       self.emit('connected');
+      console.log("host service emitted connected event");
       connection.on('disconnect', function() {
         self.emit('disconnected');
       });
@@ -51,8 +52,15 @@ export class HostService extends EventEmitter {
     self.endpoint.on('aprsData', function(data) {
       self.emit('aprsData', data);
     });
-    self.endpoint.enable();
 
+  }
+
+  enable() {
+    this.endpoint.enable();
+  }
+
+  disable() {
+    this.endpoint.disable();
   }
 
   request(request) {
