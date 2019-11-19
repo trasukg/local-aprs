@@ -23,6 +23,10 @@ import { EventEmitter } from 'events';
 import { Deduplicator } from './Deduplicator';
 import { StationProcessor } from './StationProcessor';
 import { StationRecord } from "./StationRecord";
+import { Store } from '@ngrx/store';
+import * as AprsSituationActions from './aprs-situation/aprs-situation.actions';
+import * as HostConfigActions from './host-config/host-config.actions';
+import * as fromHostConfig from './host-config/host-config.selectors';
 
 @Injectable()
 export class AprsSituationService extends EventEmitter {
@@ -43,42 +47,63 @@ export class AprsSituationService extends EventEmitter {
   config:any;
   lastServerTime:number = 0;
 
-  constructor(hostService: HostService) {
+  constructor(hostService: HostService, store: Store<any>) {
     super();
     var self=this;
     EventEmitter.apply(self);
 
+    store.select(fromHostConfig.selectHostConfigState).subscribe(next => {
+      self.config=next;
+    });
+    console.log("Beginning aprs-situation-service setup...")
+    /* This could reasonable be an 'effect' rather than being implemented here. */
     hostService.on('connected', function() {
       self.connected=true;
+      // Dispatch a 'connected' event.
+      store.dispatch(AprsSituationActions.connected());
       /* Clear the stored packets. */
       /* Request the configuration. */
+      console.log("Requesting the config")
       hostService.request({ command: "config?"}).then(function(response) {
-        self.config=response.config;
-        self.emit('updateConfig');
+        // self.config=response.config;
+        // self.emit('updateConfig');
+        console.log("Got the config ")
+        // Dispatch a 'configure' action.
+        store.dispatch(HostConfigActions.loadHostConfigsSuccess({ config: response.config}));
       })
       /* Request the server's cached packets. */
       .then(function() {
         return hostService.request({ command: "packets?"});
       })
       .then(function(response) {
-        self.clearPackets();
-        response.packets.forEach(function(item) {
-          self.processPacketWithoutUpdate(item);
-        });
-        self.calculateSummaries();
-        self.emit('update');
+        // Reimplement to dispatch a bulk-packet action.
+        store.dispatch(AprsSituationActions.receivedInitialPackets(
+          { packets: response.packets} ));
+
+        // self.clearPackets();
+        // response.packets.forEach(function(item) {
+        //   self.processPacketWithoutUpdate(item);
+        // });
+        // self.calculateSummaries();
+        // self.emit('update');
       });
     });
 
     hostService.on('disconnected', function() {
-      self.connected=false;
-      self.emit('update');
+      // self.connected=false;
+      // self.emit('update');
+
+      // Reimplement to dispatch a "Disconnected" action.
+      store.dispatch(AprsSituationActions.disconnected());
     });
 
     hostService.on('aprsData', function(packet) {
-      self.processPacket(packet);
-      self.calculateSummaries();
-      self.emit('update');
+      // self.processPacket(packet);
+      // self.calculateSummaries();
+      // self.emit('update');
+
+      // Reimplement to dispatch a packet-received action.
+      store.dispatch(AprsSituationActions.receivedPacket({packet: packet}));
     });
 
     var expireInterval=function() {
@@ -103,31 +128,14 @@ export class AprsSituationService extends EventEmitter {
     var expirePackets=function() {
       var now=self.lastServerTime;
       var expiryTime=now - expireInterval();
-      expireRawPackets(expiryTime);
-      expireDeduplicatedPackets(expiryTime);
+      // expireRawPackets(expiryTime);
+      // expireDeduplicatedPackets(expiryTime);
+
+      // reimplement to dispatch a Timer event.
+      store.dispatch(AprsSituationActions.expirePacketsBefore({ before: expiryTime} ));
     }
     setInterval(expirePackets,5000);
 
-  };
-
-  processPacket(packet) {
-    this.processPacketWithoutUpdate(packet);
-
-    this.calculateSummaries();
-    this.emit('update');
-  }
-
-  processPacketWithoutUpdate(packet) {
-    this.ensurePacketReceivedAtIsDate(packet);
-    this.rawPackets.push(packet);
-    this.deduplicator.processPacket(packet);
-    this.lastServerTime=Math.max(this.lastServerTime, packet.receivedAt.getTime());
-  };
-
-  clearPackets() {
-    this.rawPackets=[];
-    this.lastServerTime=0;
-    this.deduplicator.clear();
   };
 
   deduplicatedPackets() {
@@ -142,13 +150,5 @@ export class AprsSituationService extends EventEmitter {
       this.stationProcessor.processPacket(packet);
     }
     //console.log("this.stationsById has " + this.stationsById.size + " entries");
-  }
-
-  ensurePacketReceivedAtIsDate(packet) {
-    /* Convert the receivedAt value to a date if necessary. */
-    if (! (packet.receivedAt instanceof Date)) {
-      packet.receivedAt=new Date(packet.receivedAt);
-    }
-
   }
 }

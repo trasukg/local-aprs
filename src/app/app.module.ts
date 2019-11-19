@@ -37,6 +37,13 @@ import { RawPacketsComponent } from './raw-packets/raw-packets.component';
 import { Tnc2formPipe } from './tnc2form.pipe';
 import { StationsComponent } from './stations/stations.component';
 import { StationDetailComponent } from './station-detail/station-detail.component';
+import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
+import { AprsSituationEffects } from './aprs-situation/aprs-situation.effects';
+import * as fromAprsSituation from './aprs-situation/aprs-situation.reducer';
+import * as fromHostConfig from './host-config/host-config.reducer';
+import { HostConfigEffects } from './host-config/host-config.effects';
+import { AppEffects } from './app.effects';
 
 const appRoutes: Routes = [
   { path: 'packets', component: LocalAprsPacketsComponent },
@@ -71,7 +78,23 @@ const appRoutes: Routes = [
     ),
     BrowserModule,
     BrowserAnimationsModule,
-    MaterialModule
+    MaterialModule,
+    StoreModule.forRoot(
+      {
+        'aprsSituation': fromAprsSituation.reducer,
+        'hostConfig': fromHostConfig.reducer
+      },
+      {
+        runtimeChecks: {
+          strictStateImmutability: true,
+          strictActionImmutability: true
+        }
+      }
+    ),
+    EffectsModule.forFeature([AprsSituationEffects, HostConfigEffects]),
+    StoreModule.forFeature(fromAprsSituation.aprsSituationFeatureKey, fromAprsSituation.reducer),
+    StoreModule.forFeature(fromHostConfig.hostConfigFeatureKey, fromHostConfig.reducer),
+    EffectsModule.forRoot([AppEffects])
   ],
   providers: [
     AprsSituationService,

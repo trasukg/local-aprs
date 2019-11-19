@@ -33,7 +33,8 @@ export class HostService extends EventEmitter {
     super();
     /* Create an endpoint based on the url in the location bar. */
     var host=window.location.host;
-    var wsUrl="ws://" + host + "/ws";
+    // var wsUrl="ws://" + host + "/ws";
+    var wsUrl="ws://" + 'localhost:3000' + "/ws";
     console.log("Host service started up with web socket " + wsUrl );
     /* events will be executed in different context, so preserve 'this' */
 
