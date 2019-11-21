@@ -28,7 +28,7 @@ import {Location, LocationStrategy, HashLocationStrategy} from '@angular/common'
 import {MaterialModule} from './material-module';
 
 import {HostService} from './host.service';
-import {AprsSituationService} from './aprs-situation.service';
+import {AprsSituationService} from './aprs-situation/aprs-situation.service';
 import { LocalAprsPacketsComponent } from './local-aprs-packets/local-aprs-packets.component';
 import { SsidFormPipe } from './ssid-form.pipe';
 import { FormatReceptionsPipe } from './format-receptions.pipe';
@@ -45,6 +45,8 @@ import { HostConfigEffects } from './host-config/host-config.effects';
 import { AppEffects } from './app.effects';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from '../environments/environment';
+import { Store } from '@ngrx/store';
+import * as AprsSituationActions from './aprs-situation/aprs-situation.actions';
 
 const appRoutes: Routes = [
   { path: 'packets', component: LocalAprsPacketsComponent },
@@ -52,7 +54,7 @@ const appRoutes: Routes = [
   { path: 'stations', component: StationsComponent },
   { path: 'stations/:stationId', component: StationDetailComponent },
   { path: '',
-    redirectTo: '/packets',
+    redirectTo: '/raw-packets',
     pathMatch: 'full'
   },
   { path: '**',
@@ -106,7 +108,11 @@ const appRoutes: Routes = [
   bootstrap: [AppComponent]
 })
 export class AppModule {
-  constructor(hostService: HostService) {
+  constructor(private store: Store<any>) {
     console.log("Constructor for AppModule was called.");
+    console.log("Dispatching enableHostConnection")
+    this.store.dispatch(AprsSituationActions.enableHostConnection());
   }
+
+
 }

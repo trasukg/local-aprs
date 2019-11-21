@@ -18,10 +18,11 @@ under the License.
 */
 
 import { ax25utils } from 'utils-for-aprs';
+import * as _ from 'lodash';
 
 export class Deduplicator {
   private dedupeIndex: Map<string,any>;
-  deduplicatedPackets: Array<any>;
+  deduplicatedPackets: Array<any>=[];
 
   constructor() {
     this.dedupeIndex=new Map();
@@ -38,23 +39,15 @@ export class Deduplicator {
   }
 
   processPacket(packet) {
+    // Copy it so we don't alter any other state.
+    packet = _.cloneDeep(packet);
+
     var key=ax25utils.addressToString(packet.source).concat(packet.info);
     if (this.dedupeIndex.get(key) === undefined) {
       // Create a new packet record for this key.
       this.dedupeIndex.set(key, packet);
       // Add the packet to the deduplicated packets.
       this.deduplicatedPackets.push(packet);
-      /* Alert!!!!  Danger, Will Robinson!
-        This is a little ugly!  One could argue that we should create a clone
-        of the packet, by converting to JSON and then converting back.  But I
-        can't think of any other uses for the packet, so it seems kind of silly to
-        go to JSON and back.
-
-        Users of packets should be aware that there _may_ be an array of
-        duplicate receptions, but only if this happened to be the first packet
-        received with that key.  i.e. it's only safe to use 'receptions' iff
-        the packet was traversed through the 'deduplicatedPackets' array.
-      */
       packet.receptions=[ packet ];
     } else {
       var originalPacket=this.dedupeIndex.get(key);

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import {AprsSituationService} from '../aprs-situation.service';
-import {StationRecord} from '../StationRecord';
+import {StationRecord} from '../aprs-situation/StationRecord';
+import { Store } from '@ngrx/store';
+import * as fromAprsSituation from '../aprs-situation/aprs-situation.selectors';
 
 @Component({
   selector: 'app-stations',
@@ -9,28 +10,26 @@ import {StationRecord} from '../StationRecord';
 })
 export class StationsComponent implements OnInit {
 
-  public aprsSituation:AprsSituationService=null;;
-
-  constructor(aprsSituation:AprsSituationService) {
-    this.aprsSituation=aprsSituation;
+  constructor(private store: Store< any> ) {
   }
 
-  ngOnInit() {
-  }
+  stations$:Map<string, StationRecord>;
 
-  get stationsById():Map<string, StationRecord> {
-    return this.aprsSituation.stationsById;
-  }
-
-  get stationIds():string[] {
+  get stationIds$():string[] {
     let stationIds: string[]=[];
     // console.log("reading " + this.stationsById.size + " values");
     // console.log('stationsById=' + this.stationsById);
     // console.log('  keys=' + this.stationsById.keys());
-    stationIds=Array.from(this.stationsById.keys());
+    stationIds=Array.from(this.stations$.keys());
     stationIds=stationIds.sort();
     // console.log("stationIds=" + JSON.stringify(stationIds));
     return stationIds;
+  }
+
+  ngOnInit() {
+    this.store.select(fromAprsSituation.selectStations).subscribe(res => {
+      this.stations$=res;
+    });
   }
 
 }

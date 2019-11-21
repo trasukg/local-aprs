@@ -18,15 +18,14 @@ under the License.
 */
 
 import { Injectable } from '@angular/core';
-import { HostService } from './host.service';
+import { HostService } from '../host.service';
 import { EventEmitter } from 'events';
-import { Deduplicator } from './Deduplicator';
 import { StationProcessor } from './StationProcessor';
 import { StationRecord } from "./StationRecord";
 import { Store } from '@ngrx/store';
-import * as AprsSituationActions from './aprs-situation/aprs-situation.actions';
-import * as HostConfigActions from './host-config/host-config.actions';
-import * as fromHostConfig from './host-config/host-config.selectors';
+import * as AprsSituationActions from './aprs-situation.actions';
+import * as HostConfigActions from '../host-config/host-config.actions';
+import * as fromHostConfig from '../host-config/host-config.selectors';
 
 @Injectable()
 export class AprsSituationService extends EventEmitter {
@@ -40,14 +39,12 @@ export class AprsSituationService extends EventEmitter {
     return this.stationProcessor.stationsById;
   }
 
-  deduplicator:Deduplicator=new Deduplicator();
-
   private stationProcessor:StationProcessor=new StationProcessor();
 
   config:any;
   lastServerTime:number = 0;
 
-  constructor(hostService: HostService, store: Store<any>) {
+  constructor(private hostService: HostService, private store: Store<any>) {
     super();
     var self=this;
     EventEmitter.apply(self);
@@ -109,9 +106,6 @@ export class AprsSituationService extends EventEmitter {
       store.dispatch(AprsSituationActions.receivedPacket({packet: packet}));
     });
 
-    console.log("Enabling the hostService");
-    hostService.enable();
-
     var expireInterval=function() {
       if (self.config && self.config.standardPacketMinutesToLive) {
         return self.config.standardPacketMinutesToLive*60*1000;
@@ -120,41 +114,18 @@ export class AprsSituationService extends EventEmitter {
       }
     };
 
-    var expireRawPackets=function(expiryTime) {
-      var newPackets=self.rawPackets.filter(function(p) {
-        return (p.receivedAt.getTime() >= expiryTime);;
-      });
-      self.rawPackets=newPackets;
-    };
-
-    var expireDeduplicatedPackets=function(expiryTime) {
-      self.deduplicator.expirePacketsBefore(expiryTime);
-    };
 
     var expirePackets=function() {
       var now=self.lastServerTime;
       var expiryTime=now - expireInterval();
-      // expireRawPackets(expiryTime);
-      // expireDeduplicatedPackets(expiryTime);
-
-      // reimplement to dispatch a Timer event.
       store.dispatch(AprsSituationActions.expirePacketsBefore({ before: expiryTime} ));
     }
     setInterval(expirePackets,5000);
 
   };
 
-  deduplicatedPackets() {
-    return this.deduplicator.deduplicatedPackets;
-  };
-
-  /** Calculate the packet summaries, station lists, etc.
-  */
-  calculateSummaries() {
-    this.stationProcessor.clear();
-    for (let packet of this.deduplicatedPackets()) {
-      this.stationProcessor.processPacket(packet);
-    }
-    //console.log("this.stationsById has " + this.stationsById.size + " entries");
+  enableHost() {
+    console.log("Enabling the hostService");
+    this.hostService.enable();
   }
 }

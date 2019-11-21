@@ -1,5 +1,9 @@
 import { createAction, props } from '@ngrx/store';
 
+export const enableHostConnection = createAction(
+  '[Packet] Enable Host Connection'
+);
+
 export const receivedPacket = createAction(
   '[Packet] Receive',
   props<{ packet: any }>()
