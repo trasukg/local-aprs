@@ -27,6 +27,7 @@ export class StationRecord {
   public weather:any=null;
   public status:string='';
   public lastHeardAt:Date=null;
+  public info:string='';
 
   constructor(public stationId:string) {
 
@@ -59,6 +60,9 @@ export class StationRecord {
     if (packet.statusText) {
       //console.log("Got a status!!!!!!!!");
       this.status=packet.statusText;
+    }
+    if (packet.info) {
+      this.info=packet.info;
     }
   }
 }

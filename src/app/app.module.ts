@@ -27,9 +27,8 @@ import {CdkTableModule} from '@angular/cdk/table';
 import {Location, LocationStrategy, HashLocationStrategy} from '@angular/common';
 import {MaterialModule} from './material-module';
 
-
 import {HostService} from './host.service';
-import {AprsSituationService} from './aprs-situation.service';
+import {AprsSituationService} from './aprs-situation/aprs-situation.service';
 import { LocalAprsPacketsComponent } from './local-aprs-packets/local-aprs-packets.component';
 import { SsidFormPipe } from './ssid-form.pipe';
 import { FormatReceptionsPipe } from './format-receptions.pipe';
@@ -37,6 +36,17 @@ import { RawPacketsComponent } from './raw-packets/raw-packets.component';
 import { Tnc2formPipe } from './tnc2form.pipe';
 import { StationsComponent } from './stations/stations.component';
 import { StationDetailComponent } from './station-detail/station-detail.component';
+import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
+import { AprsSituationEffects } from './aprs-situation/aprs-situation.effects';
+import * as fromAprsSituation from './aprs-situation/aprs-situation.reducer';
+import * as fromHostConfig from './host-config/host-config.reducer';
+import { HostConfigEffects } from './host-config/host-config.effects';
+import { AppEffects } from './app.effects';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { environment } from '../environments/environment';
+import { Store } from '@ngrx/store';
+import * as AprsSituationActions from './aprs-situation/aprs-situation.actions';
 
 const appRoutes: Routes = [
   { path: 'packets', component: LocalAprsPacketsComponent },
@@ -44,7 +54,7 @@ const appRoutes: Routes = [
   { path: 'stations', component: StationsComponent },
   { path: 'stations/:stationId', component: StationDetailComponent },
   { path: '',
-    redirectTo: '/packets',
+    redirectTo: '/raw-packets',
     pathMatch: 'full'
   },
   { path: '**',
@@ -71,7 +81,24 @@ const appRoutes: Routes = [
     ),
     BrowserModule,
     BrowserAnimationsModule,
-    MaterialModule
+    MaterialModule,
+    StoreModule.forRoot(
+      {
+        'aprsSituation': fromAprsSituation.reducer,
+        'hostConfig': fromHostConfig.reducer
+      },
+      {
+        runtimeChecks: {
+          strictStateImmutability: true,
+          strictActionImmutability: true
+        }
+      }
+    ),
+    EffectsModule.forFeature([AprsSituationEffects, HostConfigEffects]),
+    StoreModule.forFeature(fromAprsSituation.aprsSituationFeatureKey, fromAprsSituation.reducer),
+    StoreModule.forFeature(fromHostConfig.hostConfigFeatureKey, fromHostConfig.reducer),
+    EffectsModule.forRoot([AppEffects]),
+    StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production })
   ],
   providers: [
     AprsSituationService,
@@ -81,7 +108,11 @@ const appRoutes: Routes = [
   bootstrap: [AppComponent]
 })
 export class AppModule {
-  constructor(hostService: HostService) {
+  constructor(private store: Store<any>) {
     console.log("Constructor for AppModule was called.");
+    console.log("Dispatching enableHostConnection")
+    this.store.dispatch(AprsSituationActions.enableHostConnection());
   }
+
+
 }

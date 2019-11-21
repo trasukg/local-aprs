@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
-import {AprsSituationService} from '../aprs-situation.service';
-import {StationRecord} from '../StationRecord';
+import {AprsSituationService} from '../aprs-situation/aprs-situation.service';
+import {StationRecord} from '../aprs-situation/StationRecord';
 
 @Component({
   selector: 'app-station-detail',

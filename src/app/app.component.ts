@@ -36,6 +36,7 @@ export class AppComponent {
     this.mobileQuery=media.matchMedia('(max-width:600px)');
     this._mobileQueryListener = () => changeDetectorRef.detectChanges();
       this.mobileQuery.addListener(this._mobileQueryListener);
-    hostService.on('update', () => changeDetectorRef.detectChanges)
+    // Will not be necessary with reactive style
+    //hostService.on('update', () => changeDetectorRef.detectChanges)
   };
 }

@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 <mat-list>
-  <mat-list-item *ngFor="let packet of aprsSituation.rawPackets">
+  <mat-list-item *ngFor="let packet of rawPackets$">
     {{packet | tnc2form}}
   </mat-list-item>
 </mat-list>

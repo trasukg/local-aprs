@@ -18,7 +18,8 @@ under the License.
 */
 
 import { Component, OnInit } from '@angular/core';
-import {AprsSituationService} from '../aprs-situation.service';
+import { Store } from '@ngrx/store';
+import * as fromAprsSituation from '../aprs-situation/aprs-situation.selectors';
 
 @Component({
   selector: 'app-local-aprs-packets',
@@ -26,10 +27,14 @@ import {AprsSituationService} from '../aprs-situation.service';
   styleUrls: ['./local-aprs-packets.component.css'],
 })
 export class LocalAprsPacketsComponent implements OnInit {
+  deduplicatedPackets$: any[];
 
-  constructor(public aprsSituation:AprsSituationService) { }
+  constructor(private store: Store< any > ) { }
 
   ngOnInit() {
+    this.store.select(fromAprsSituation.selectDeduplicatedPackets).subscribe(res => {
+      this.deduplicatedPackets$=res;
+    });
   }
 
 }
