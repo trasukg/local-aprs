@@ -1,12 +1,15 @@
 <mat-card>
-  <mat-card-title>{{station.stationId}}</mat-card-title>
+  <mat-card-title>{{station$.stationId}}</mat-card-title>
   <mat-card-content>
-    Last Heard: {{station.lastHeardAt | date : 'hh:mm:ss' }}<br>
-    Status: {{station.status}}<br>
-    Last comment: {{station.lastComment}}<br>
+    Last Heard: {{station$.lastHeardAt | date : 'hh:mm:ss' }}<br>
+    Status: {{station$.status}}<br>
+    Last comment: {{station$.comment}}<br>
+    <ng-container *ngIf="station$?.position?.coords as coords">
+      Lat: {{coords.latitude}} Long: {{coords.longitude}}
+    </ng-container>
     <h2>Packets</h2>
     <mat-list>
-      <mat-list-item *ngFor="let packet of station.packets">
+      <mat-list-item *ngFor="let packet of station$.packets">
         <h3 mat-line>{{packet.receivedAt | date : 'hh:mm:ss' }} {{packet.source | ssidForm}}</h3>
         <h4 mat-line>{{packet.info}}</h4>
         <p mat-line>

@@ -25,3 +25,8 @@ export const selectStations = createSelector(selectDeduplicatedPackets,
     packets.map(packet => stationProcessor.processPacket(packet))
   return stationProcessor.stationsById;
 });
+
+export const selectStation = () => createSelector(
+  selectStations,
+  (stations, props) => stations.get(props.stationId)
+)
