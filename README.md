@@ -48,9 +48,9 @@ JSON format.  The last
 hour's packets are stored for replay when a client connects.  Live packets
 are repeated out to the clients using web sockets.
 
-The client is an AngularJS application that's served out by the server.  It runs
+The client is an Angular application that's served out by the server.  It runs
 in the client's browser, and communicates back to the server using web sockets.
-It uses the Bootstrap and UI-Bootstrap libraries to provide responsive-web
+It provides responsive-web
 characteristics, so it runs on a variety of devices.
 
 Upon initial connection, the server plays back the last hour's packets, so that
