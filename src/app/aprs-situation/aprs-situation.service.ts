@@ -26,37 +26,32 @@ import { Store } from '@ngrx/store';
 import * as AprsSituationActions from './aprs-situation.actions';
 import * as HostConfigActions from '../host-config/host-config.actions';
 import * as fromHostConfig from '../host-config/host-config.selectors';
+import * as fromAprs from './aprs-situation.selectors';
 
 @Injectable()
 export class AprsSituationService extends EventEmitter {
-  connected:boolean=false;
 
-  // Raw packets, not deduplicated, in order of receipt.
-  public rawPackets:any[]=[];
+  config$:any;
 
-  // Station records, generated from the packets that we have.
-  get stationsById():Map<string, StationRecord> {
-    return this.stationProcessor.stationsById;
-  }
-
-  private stationProcessor:StationProcessor=new StationProcessor();
-
-  config:any;
-  lastServerTime:number = 0;
+  aprsSituation$: any;
 
   constructor(private hostService: HostService, private store: Store<any>) {
     super();
-    var self=this;
+    let self=this;
     EventEmitter.apply(self);
 
     store.select(fromHostConfig.selectHostConfigState).subscribe(next => {
-      self.config=next;
+      self.config$=next;
     });
+
+    store.select(fromAprs.selectAprsSituationState).subscribe(next => {
+      self.aprsSituation$=next;
+    });
+
     console.log("Beginning aprs-situation-service setup...")
     /* This could reasonable be an 'effect' rather than being implemented here. */
     hostService.on('connected', function() {
       console.log("Got connected event.");
-      self.connected=true;
       // Dispatch a 'connected' event.
       store.dispatch(AprsSituationActions.connected());
       console.log("Dispatched connected action");
@@ -107,8 +102,8 @@ export class AprsSituationService extends EventEmitter {
     });
 
     var expireInterval=function() {
-      if (self.config && self.config.standardPacketMinutesToLive) {
-        return self.config.standardPacketMinutesToLive*60*1000;
+      if (self.config$ && self.config$.standardPacketMinutesToLive) {
+        return self.config$.standardPacketMinutesToLive*60*1000;
       } else {  // Default to 60 minutes.
         return 60*60*1000;
       }
@@ -116,7 +111,7 @@ export class AprsSituationService extends EventEmitter {
 
 
     var expirePackets=function() {
-      var now=self.lastServerTime;
+      var now=Date.now();
       var expiryTime=now - expireInterval();
       store.dispatch(AprsSituationActions.expirePacketsBefore({ before: expiryTime} ));
     }

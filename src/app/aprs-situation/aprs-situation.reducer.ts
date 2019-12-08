@@ -6,13 +6,15 @@ export const aprsSituationFeatureKey = 'aprsSituation';
 export interface State {
   rawPackets: any[],
   deduplicatedPackets: any[],
-  lastServerTime: number
+  lastServerTime: number,
+  connected: boolean
 }
 
 export const initialState: State = {
   rawPackets: [],
   deduplicatedPackets: [],
-  lastServerTime: 0
+  lastServerTime: 0,
+  connected: false
 };
 
 function ensurePacketReceivedAtIsDate(packet){
@@ -47,6 +49,7 @@ const aprsSituationReducer = createReducer(
       let start=Date.now();
       // Since state is immutable, we need to copy the list of packets.
       let newSituation:State = {
+        ...aprsSituation,
         rawPackets: [],
         deduplicatedPackets: [],
         lastServerTime: 0
@@ -65,16 +68,48 @@ const aprsSituationReducer = createReducer(
       console.log('receivedInitialPackets', packets)
       // Since state is immutable, we need to copy the list of packets.
       let newSituation:State = {
+        ...aprsSituation,
         rawPackets: [],
         deduplicatedPackets: [],
-        lastServerTime: 0
+        lastServerTime: 0,
       };
       packets.map(packet => {
         processPacket(newSituation, packet);
     });
-    return  newSituation
+    return  newSituation;
+  }),
+  on(AprsSituationActions.connected,
+    function(aprsSituation) {
+      console.log('connected')
+      // Since state is immutable, we need to copy the list of packets.
+      let newSituation:State = {
+        ...aprsSituation,
+        rawPackets: [],
+        deduplicatedPackets: [],
+        lastServerTime: 0,
+        connected: true
+      };
+      aprsSituation.rawPackets.map(packet => {
+        processPacket(newSituation, packet);
+    });
+    return  newSituation;
+  }),
+  on(AprsSituationActions.disconnected,
+    function(aprsSituation) {
+      console.log('disconnected')
+      // Since state is immutable, we need to copy the list of packets.
+      let newSituation:State = {
+        ...aprsSituation,
+        rawPackets: [],
+        deduplicatedPackets: [],
+        lastServerTime: 0,
+        connected: false
+      };
+      aprsSituation.rawPackets.map(packet => {
+        processPacket(newSituation, packet);
+    });
+    return  newSituation;
   })
-
 );
 
 export function reducer(state: State | undefined, action: Action) {
