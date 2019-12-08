@@ -47,9 +47,12 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from '../environments/environment';
 import { Store } from '@ngrx/store';
 import * as AprsSituationActions from './aprs-situation/aprs-situation.actions';
+import { AprsMapComponent } from './aprs-map/aprs-map.component';
+import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 
 const appRoutes: Routes = [
   { path: 'packets', component: LocalAprsPacketsComponent },
+  { path: 'map', component: AprsMapComponent },
   { path: 'raw-packets', component: RawPacketsComponent },
   { path: 'stations', component: StationsComponent },
   { path: 'stations/:stationId', component: StationDetailComponent },
@@ -72,7 +75,8 @@ const appRoutes: Routes = [
     RawPacketsComponent,
     Tnc2formPipe,
     StationsComponent,
-    StationDetailComponent
+    StationDetailComponent,
+    AprsMapComponent
   ],
   imports: [
     RouterModule.forRoot(
@@ -98,7 +102,8 @@ const appRoutes: Routes = [
     StoreModule.forFeature(fromAprsSituation.aprsSituationFeatureKey, fromAprsSituation.reducer),
     StoreModule.forFeature(fromHostConfig.hostConfigFeatureKey, fromHostConfig.reducer),
     EffectsModule.forRoot([AppEffects]),
-    StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production })
+    StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production }),
+    LeafletModule.forRoot()
   ],
   providers: [
     AprsSituationService,
