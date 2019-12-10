@@ -29,6 +29,9 @@ under the License.
     <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'"
     [fixedInViewport]="mobileQuery.matches" fixedTopGap="56">
       <mat-list>
+        <mat-list-item><a routerLink='/map'
+          routerLinkActive='active'
+          mat-button>Map</a></mat-list-item>
         <mat-list-item><a routerLink='/packets'
           routerLinkActive='active'
           mat-button>Packets</a></mat-list-item>
