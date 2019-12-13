@@ -28,3 +28,18 @@ to the clients.
 * Client preferences are keyed to the server identifier, so that if you use the
 same device (browser, phone, etc) against multiple local-aprs servers, the
 preferences are kept separately.  
+
+## Design
+
+* The server keeps a client-configuration file.  The client downloads this
+file when it connects to the server.
+* The server also keeps a file that tells the client what fields in the
+client-configuration file can be overridden by the client side.
+  * Some fields are purely configuration and not user preferences. In other words they shouldn't be shown in an editor page.
+* The client stores a client-side configuration on the client, only if the
+user has done any overrides.  This file is also downloaded on connection.  
+* The client merges the server and client configurations according to the
+override file, to form an effective configuration, that is made available
+through a selector.
+* The schema for the configuration is defined in a ClientConfiguration class.
+* The client has a screen where the user can edit their preferences.
