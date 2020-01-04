@@ -47,7 +47,7 @@ export class StationRecord {
     if (packet.receivedAt) {
       this.lastHeardAt=packet.receivedAt;
     }
-    if (packet.position) {
+    if (packet.position && packet.position.coords.latitude) {
       this.position=packet.position;
       this.track.push(packet.position);
     }

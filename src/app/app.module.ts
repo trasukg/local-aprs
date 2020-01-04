@@ -49,6 +49,9 @@ import { Store } from '@ngrx/store';
 import * as AprsSituationActions from './aprs-situation/aprs-situation.actions';
 import { AprsMapComponent } from './aprs-map/aprs-map.component';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
+import * as fromPosition from './position/position.reducer';
+import { PositionEffects } from './position/position.effects';
+import * as PositionActions from './position/position.actions';
 
 const appRoutes: Routes = [
   { path: 'packets', component: LocalAprsPacketsComponent },
@@ -98,12 +101,13 @@ const appRoutes: Routes = [
         }
       }
     ),
-    EffectsModule.forFeature([AprsSituationEffects, HostConfigEffects]),
+    EffectsModule.forFeature([AprsSituationEffects, HostConfigEffects, PositionEffects]),
     StoreModule.forFeature(fromAprsSituation.aprsSituationFeatureKey, fromAprsSituation.reducer),
     StoreModule.forFeature(fromHostConfig.hostConfigFeatureKey, fromHostConfig.reducer),
     EffectsModule.forRoot([AppEffects]),
     StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production }),
-    LeafletModule.forRoot()
+    LeafletModule.forRoot(),
+    StoreModule.forFeature(fromPosition.positionFeatureKey, fromPosition.reducer)
   ],
   providers: [
     AprsSituationService,
@@ -115,8 +119,10 @@ const appRoutes: Routes = [
 export class AppModule {
   constructor(private store: Store<any>) {
     console.log("Constructor for AppModule was called.");
-    console.log("Dispatching enableHostConnection")
+    console.log("Dispatching enableHostConnection");
     this.store.dispatch(AprsSituationActions.enableHostConnection());
+    console.log("Dispatching enablePosition");
+    this.store.dispatch(PositionActions.enablePosition());
   }
 
 

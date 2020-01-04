@@ -22,6 +22,10 @@
     "url": "git@github.com:trasukg/local-aprs.git"
   },
   "dependencies": {
+    "@angular/animations": "^8.0.0 || ^9.0.0-0",
+    "@angular/cdk": "~8.2.3",
+    "@angular/forms": "^8.0.0 || ^9.0.0-0",
+    "@angular/material": "~8.2.3",
     "@asymmetrik/ngx-leaflet": "^6.0.1",
     "@ngrx/effects": "^8.4.0",
     "@ngrx/store": "^8.4.0",
@@ -51,7 +55,7 @@
     "zone.js": "~0.9.1"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "~0.803.9",
+    "@angular-devkit/build-angular": "^0.803.21",
     "@angular/animations": "~8.2.10",
     "@angular/cdk": "~8.2.3",
     "@angular/cli": "~8.3.9",
