@@ -17,26 +17,36 @@ specific language governing permissions and limitations
 under the License.
 */
 
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import {MediaMatcher} from '@angular/cdk/layout';
 import {HostService} from './host.service';
+import { Store } from '@ngrx/store';
+import * as appActions from './app.actions';
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   title = 'app';
   mobileQuery: MediaQueryList;
   private _mobileQueryListener: () => void;
 
   constructor(changeDetectorRef: ChangeDetectorRef,
     media: MediaMatcher,
-    hostService: HostService) {
+    hostService: HostService,
+    private store: Store<any>
+  ) {
     this.mobileQuery=media.matchMedia('(max-width:600px)');
     this._mobileQueryListener = () => changeDetectorRef.detectChanges();
       this.mobileQuery.addListener(this._mobileQueryListener);
     // Will not be necessary with reactive style
     //hostService.on('update', () => changeDetectorRef.detectChanges)
   };
+
+  ngOnInit() {
+    console.log("Sending start action.");
+    this.store.dispatch(appActions.startupApplication());
+  }
 }

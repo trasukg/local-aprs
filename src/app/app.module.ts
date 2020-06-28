@@ -118,12 +118,6 @@ const appRoutes: Routes = [
 })
 export class AppModule {
   constructor(private store: Store<any>) {
-    console.log("Constructor for AppModule was called.");
-    console.log("Dispatching enableHostConnection");
-    this.store.dispatch(AprsSituationActions.enableHostConnection());
-    console.log("Dispatching enablePosition");
-    this.store.dispatch(PositionActions.enablePosition());
   }
-
 
 }
