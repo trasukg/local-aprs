@@ -7,6 +7,11 @@
     <ng-container *ngIf="station$?.position?.coords as coords">
       Lat: {{coords.latitude}} Long: {{coords.longitude}}
     </ng-container>
+    <div *ngIf="station$?.position?.coords as coords" class='coords'>
+      Lat: {{coords.latitude}} Long: {{coords.longitude}}<br>
+      {{ (stationBearings$ | async)[station$.stationId]?.distance / 1000 | number:'1.1-1' }}km
+      @ {{ (stationBearings$ | async)[station$.stationId]?.bearing | number:'1.0-0' }}&deg;
+    </div>
     <h2>Packets</h2>
     <mat-list>
       <mat-list-item *ngFor="let packet of station$.packets">
