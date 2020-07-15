@@ -26,7 +26,7 @@ export class PositionEffects {
       speed: geopos.coords.speed
     }
     let pos={ coords: coords, timestamp: geopos.timestamp };
-    console.log("Got position: " + JSON.stringify(pos, undefined, 2));
+    // console.log("Got position: " + JSON.stringify(pos, undefined, 2));
     this.store.dispatch(PositionActions.reportPosition({position: pos }));
   };
 
@@ -49,7 +49,7 @@ export class PositionEffects {
         watchPosition() only calls back when the position changes - it doesn't
         give us an initial update.  So do a getCurrentPosition call now.
       */
-      console.log("Getting current position...")
+      // console.log("Getting current position...")
       navigator.geolocation.getCurrentPosition(
         pos => this.reportPosition(pos),
         err => this.store.dispatch(PositionActions.positionFailure({ error: err}))

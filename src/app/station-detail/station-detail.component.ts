@@ -12,6 +12,7 @@ import {StationRecord} from '../aprs-situation/StationRecord';
 export class StationDetailComponent implements OnInit {
 
   public station$: StationRecord=undefined;
+  stationBearings$ = this.store.select(fromAprsSituation.stationBearings);
 
   constructor(
     private route: ActivatedRoute,

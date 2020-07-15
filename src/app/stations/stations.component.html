@@ -17,20 +17,25 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-  <mat-card
-  *ngFor="let stationId of stationIds$">
-    <mat-card-title>{{stationId}}</mat-card-title>
-    <mat-card-content>
-      <ng-container *ngIf="stations$.get(stationId) as station">
+  <div class='station-tile'
+  *ngFor="let stationId of (stationIds$ | async)">
+    <div class='station-id'>{{stationId}}</div>
+
+      <div *ngIf="(stations$ | async).get(stationId) as station" class='station-details-block'>
       Packet Count: {{station.packets.length}}; Last Heard: {{station.lastHeardAt | date : 'hh:mm:ss' }}<br>
       Status: {{station.status}}<br>
       Info: {{station.info}}<br>
       Comment: {{station.comment}}<br>
-      <ng-container *ngIf="station?.position?.coords as coords">
-        Lat: {{coords.latitude}} Long: {{coords.longitude}}
-      </ng-container>
-      </ng-container>
-    </mat-card-content>
-    <a routerLink="/stations/{{stationId}}" mat-raised-button>Details
-  </a>
-  </mat-card>
+      <div *ngIf="station?.position?.coords as coords" class='coords'>
+        Lat: {{coords.latitude}} Long: {{coords.longitude}}<br>
+        {{ (stationBearings$ | async)[stationId]?.distance / 1000 | number:'1.1-1' }}km
+        @ {{ (stationBearings$ | async)[stationId]?.bearing | number:'1.0-0' }}&deg;
+      </div>
+      </div>
+
+    <a routerLink="/stations/{{stationId}}" class='mat-icon-button'>
+      <mat-icon aria-hidden="false" aria-label="Station Details">
+        description
+      </mat-icon>
+    </a>
+  </div>
