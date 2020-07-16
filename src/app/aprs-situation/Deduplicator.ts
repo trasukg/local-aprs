@@ -18,7 +18,6 @@ under the License.
 */
 
 import { ax25utils } from 'utils-for-aprs';
-import * as _ from 'lodash';
 
 export class Deduplicator {
   private dedupeIndex: Map<string,any>;
@@ -39,8 +38,8 @@ export class Deduplicator {
   }
 
   processPacket(packet) {
-    // Copy it so we don't alter any other state.
-    packet = _.cloneDeep(packet);
+    // Shallow copy is enough; we're not changing the data, just adding to it.
+    packet = { ...packet };
 
     var key=ax25utils.addressToString(packet.source).concat(packet.info);
     if (this.dedupeIndex.get(key) === undefined) {
@@ -48,10 +47,10 @@ export class Deduplicator {
       this.dedupeIndex.set(key, packet);
       // Add the packet to the deduplicated packets.
       this.deduplicatedPackets.push(packet);
-      packet.receptions=[ packet ];
+      packet.duplicates=[];
     } else {
       var originalPacket=this.dedupeIndex.get(key);
-      originalPacket.receptions.push(packet);
+      originalPacket.duplicates.push(packet);
     }
   };
 
