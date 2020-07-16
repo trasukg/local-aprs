@@ -40,13 +40,11 @@ export class AppComponent implements OnInit {
   ) {
     this.mobileQuery=media.matchMedia('(max-width:600px)');
     this._mobileQueryListener = () => changeDetectorRef.detectChanges();
-      this.mobileQuery.addListener(this._mobileQueryListener);
-    // Will not be necessary with reactive style
-    //hostService.on('update', () => changeDetectorRef.detectChanges)
+    this.mobileQuery.addListener(this._mobileQueryListener);
   };
 
   ngOnInit() {
-    console.log("Sending start action.");
+    // console.log("Sending start action.");
     this.store.dispatch(appActions.startupApplication());
   }
 }

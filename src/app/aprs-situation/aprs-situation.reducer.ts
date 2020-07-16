@@ -41,7 +41,7 @@ const aprsSituationReducer = createReducer(
 
   on(AprsSituationActions.receivedPacket,
     function(aprsSituation, { packet }):State {
-      console.log('receivedPacket');
+      // console.log('receivedPacket');
       let start=Date.now();
       // Since state is immutable, we need to copy the list of packets.
       let newSituation:State = {

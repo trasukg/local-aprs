@@ -20,8 +20,6 @@ under the License.
 import { Injectable } from '@angular/core';
 import { HostService } from '../host.service';
 import { EventEmitter } from 'events';
-import { StationProcessor } from './StationProcessor';
-import { StationRecord } from "./StationRecord";
 import { Store } from '@ngrx/store';
 import * as AprsSituationActions from './aprs-situation.actions';
 import * as HostConfigActions from '../host-config/host-config.actions';
@@ -31,9 +29,9 @@ import * as fromAprs from './aprs-situation.selectors';
 @Injectable()
 export class AprsSituationService extends EventEmitter {
 
-  config$:any;
+  config:any;
 
-  aprsSituation$: any;
+  aprsSituation: any;
 
   constructor(private hostService: HostService, private store: Store<any>) {
     super();
@@ -41,27 +39,27 @@ export class AprsSituationService extends EventEmitter {
     EventEmitter.apply(self);
 
     store.select(fromHostConfig.selectHostConfigState).subscribe(next => {
-      self.config$=next;
+      self.config=next;
     });
 
     store.select(fromAprs.selectAprsSituationState).subscribe(next => {
-      self.aprsSituation$=next;
+      self.aprsSituation=next;
     });
 
-    console.log("Beginning aprs-situation-service setup...")
+    // console.log("Beginning aprs-situation-service setup...")
     /* This could reasonable be an 'effect' rather than being implemented here. */
     hostService.on('connected', function() {
-      console.log("Got connected event.");
+      // console.log("Got connected event.");
       // Dispatch a 'connected' event.
       store.dispatch(AprsSituationActions.connected());
-      console.log("Dispatched connected action");
+      // console.log("Dispatched connected action");
       /* Clear the stored packets. */
       /* Request the configuration. */
-      console.log("Requesting the config")
+      // console.log("Requesting the config")
       hostService.request({ command: "config?"}).then(function(response) {
         // self.config=response.config;
         // self.emit('updateConfig');
-        console.log("Got the config ")
+        // console.log("Got the config ")
         // Dispatch a 'configure' action.
         store.dispatch(HostConfigActions.loadHostConfigsSuccess({ config: response.config}));
       })
@@ -97,13 +95,13 @@ export class AprsSituationService extends EventEmitter {
       // self.emit('update');
 
       // Reimplement to dispatch a packet-received action.
-      console.log("dispatching receivedPacket event");
+      // console.log("dispatching receivedPacket event");
       store.dispatch(AprsSituationActions.receivedPacket({packet: packet}));
     });
 
     var expireInterval=function() {
-      if (self.config$ && self.config$.standardPacketMinutesToLive) {
-        return self.config$.standardPacketMinutesToLive*60*1000;
+      if (self.config && self.config.standardPacketMinutesToLive) {
+        return self.config.standardPacketMinutesToLive*60*1000;
       } else {  // Default to 60 minutes.
         return 60*60*1000;
       }
@@ -120,7 +118,7 @@ export class AprsSituationService extends EventEmitter {
   };
 
   enableHost() {
-    console.log("Enabling the hostService");
+    // console.log("Enabling the hostService");
     this.hostService.enable();
   }
 }

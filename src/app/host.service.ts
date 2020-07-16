@@ -35,7 +35,7 @@ export class HostService extends EventEmitter {
     var host=window.location.host;
     // var wsUrl="ws://" + host + "/ws";
     var wsUrl="ws://" + 'localhost:3000' + "/ws";
-    console.log("Host service started up with web socket " + wsUrl );
+    // console.log("Host service started up with web socket " + wsUrl );
     /* events will be executed in different context, so preserve 'this' */
 
     var self=this;
@@ -44,7 +44,7 @@ export class HostService extends EventEmitter {
     self.endpoint.on('connect', function(connection) {
       self.connected=true;
       self.emit('connected');
-      console.log("host service emitted connected event");
+      // console.log("host service emitted connected event");
       connection.on('disconnect', function() {
         self.emit('disconnected');
       });
