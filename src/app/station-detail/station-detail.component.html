@@ -18,7 +18,7 @@
         <h3 mat-line>{{packet.receivedAt | date : 'hh:mm:ss' }} {{packet.source | ssidForm}}</h3>
         <h4 mat-line>{{packet.info}}</h4>
         <p mat-line>
-          {{packet.receptions | formatReceptions}}
+          {{packet | formatReceptions}}
         </p>
       </mat-list-item>
     </mat-list>

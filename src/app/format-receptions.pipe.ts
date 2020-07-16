@@ -25,8 +25,9 @@ import { ax25utils } from 'utils-for-aprs';
 })
 export class FormatReceptionsPipe implements PipeTransform {
 
-  transform(receptions: any, args?: any): any {
+  transform(packet: any, args?: any): any {
     var ret="";
+    const receptions = [ packet, ...packet.duplicates ];
     for (var i in receptions) {
       if(receptions.hasOwnProperty(i)) {
         var frame=receptions[i];
