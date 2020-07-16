@@ -36,7 +36,7 @@
     "core-js": "^2.6.9",
     "events": "^2.1.0",
     "express": "^4.17.1",
-    "express-hbs": "^2.3.0",
+    "express-hbs": "^2.3.3",
     "express-ws": "^4.0.0",
     "handlebars": "^4.5.3",
     "leaflet": "^1.6.0",
