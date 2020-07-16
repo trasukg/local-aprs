@@ -2,7 +2,7 @@ import { createFeatureSelector, createSelector } from '@ngrx/store';
 import * as fromAprsSituation from './aprs-situation.reducer';
 import { Deduplicator } from './Deduplicator';
 import { StationProcessor } from './StationProcessor';
-import { Haversine } from 'haversine-position';
+import { Haversine } from '../haversine-position';
 import * as fromPosition from '../position/position.selectors';
 
 export const selectAprsSituationState = createFeatureSelector<fromAprsSituation.State>(

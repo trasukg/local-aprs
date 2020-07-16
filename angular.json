@@ -17,6 +17,10 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "allowedCommonJsDependencies": [
+              "utils-for-aprs",
+              "haversine-position"
+            ],
             "aot": true,
             "outputPath": "dist/ng-app",
             "index": "src/index.html",
