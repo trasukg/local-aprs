@@ -91,8 +91,8 @@ const appRoutes: Routes = [
     MaterialModule,
     StoreModule.forRoot(
       {
-        'aprsSituation': fromAprsSituation.reducer,
-        'hostConfig': fromHostConfig.reducer
+        aprsSituation: fromAprsSituation.reducer,
+        hostConfig: fromHostConfig.reducer
       },
       {
         runtimeChecks: {
