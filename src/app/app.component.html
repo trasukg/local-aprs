@@ -19,7 +19,7 @@ under the License.
 <div [class.app-is-mobile]='mobileQuery.matches' class='app-container'>
 
   <mat-toolbar color='primary' class='app-toolbar'>
-    <button mat-icon-button (click)="snav.toggle()">
+    <button *ngIf="mobileQuery.matches" mat-icon-button (click)="snav.toggle()">
       <mat-icon>menu</mat-icon>
     </button>
     <h1 class="app-name">Local-APRS</h1>
@@ -29,16 +29,16 @@ under the License.
     <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'"
     [fixedInViewport]="mobileQuery.matches" fixedTopGap="56">
       <mat-list>
-        <mat-list-item><a routerLink='/map'
+        <mat-list-item><a (click)='closeSidenavIfMobile()' routerLink='/map'
           routerLinkActive='active'
           mat-button>Map</a></mat-list-item>
-        <mat-list-item><a routerLink='/packets'
+        <mat-list-item><a (click)='closeSidenavIfMobile()' routerLink='/packets'
           routerLinkActive='active'
           mat-button>Packets</a></mat-list-item>
-        <mat-list-item><a routerLink='/stations'
+        <mat-list-item><a (click)='closeSidenavIfMobile()' routerLink='/stations'
             routerLinkActive='active'
             mat-button>Stations</a></mat-list-item>
-        <mat-list-item><a routerLink='/raw-packets'
+        <mat-list-item><a (click)='closeSidenavIfMobile()' routerLink='/raw-packets'
           routerLinkActive='active'
           mat-button>RawPackets</a></mat-list-item>
       </mat-list>
