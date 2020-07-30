@@ -17,8 +17,9 @@ specific language governing permissions and limitations
 under the License.
 */
 
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
 import {MediaMatcher} from '@angular/cdk/layout';
+import {MatSidenav} from '@angular/material/sidenav';
 import {HostService} from './host.service';
 import { Store } from '@ngrx/store';
 import * as appActions from './app.actions';
@@ -28,10 +29,11 @@ import * as appActions from './app.actions';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, AfterViewInit {
   title = 'app';
   mobileQuery: MediaQueryList;
   private _mobileQueryListener: () => void;
+  @ViewChild('snav') sidenav: MatSidenav;
 
   constructor(changeDetectorRef: ChangeDetectorRef,
     media: MediaMatcher,
@@ -39,12 +41,30 @@ export class AppComponent implements OnInit {
     private store: Store<any>
   ) {
     this.mobileQuery=media.matchMedia('(max-width:600px)');
-    this._mobileQueryListener = () => changeDetectorRef.detectChanges();
+    this._mobileQueryListener = () => {
+      console.log("mobileQuery.matches=" + this.mobileQuery.matches)
+      if (this.mobileQuery.matches === false) {
+        this.sidenav.open();
+      }
+      changeDetectorRef.detectChanges();
+    }
     this.mobileQuery.addListener(this._mobileQueryListener);
   };
 
   ngOnInit() {
     // console.log("Sending start action.");
     this.store.dispatch(appActions.startupApplication());
+  }
+
+  ngAfterViewInit() {
+    if (this.mobileQuery.matches === false) {
+      this.sidenav.open();
+    }
+  }
+
+  closeSidenavIfMobile() {
+    if (this.mobileQuery.matches === true) {
+      this.sidenav.close();
+    }
   }
 }
