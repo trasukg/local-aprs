@@ -32,24 +32,25 @@ import * as appActions from './app.actions';
 export class AppComponent implements OnInit, AfterViewInit {
   title = 'app';
   mobileQuery: MediaQueryList;
-  private _mobileQueryListener: () => void;
+  private mobileQueryListener: () => void;
   @ViewChild('snav') sidenav: MatSidenav;
 
-  constructor(changeDetectorRef: ChangeDetectorRef,
+  constructor(
+    changeDetectorRef: ChangeDetectorRef,
     media: MediaMatcher,
     hostService: HostService,
     private store: Store<any>
   ) {
-    this.mobileQuery=media.matchMedia('(max-width:600px)');
-    this._mobileQueryListener = () => {
-      console.log("mobileQuery.matches=" + this.mobileQuery.matches)
+    this.mobileQuery = media.matchMedia('(max-width:600px)');
+    this.mobileQueryListener = () => {
+      // console.log("mobileQuery.matches=" + this.mobileQuery.matches);
       if (this.mobileQuery.matches === false) {
         this.sidenav.open();
       }
       changeDetectorRef.detectChanges();
-    }
+    };
     this.mobileQuery.addListener(this._mobileQueryListener);
-  };
+  }
 
   ngOnInit() {
     // console.log("Sending start action.");

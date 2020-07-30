@@ -4,9 +4,9 @@ import * as AprsSituationActions from './aprs-situation.actions';
 export const aprsSituationFeatureKey = 'aprsSituation';
 
 export interface State {
-  rawPackets: any[],
-  lastServerTime: number,
-  connected: boolean
+  rawPackets: any[];
+  lastServerTime: number;
+  connected: boolean;
 }
 
 export const initialState: State = {
@@ -21,16 +21,16 @@ function ensurePacketReceivedAtIsDate(packet){
       return {
         ...packet,
         receivedAt: new Date(packet.receivedAt)
-      }
+      };
     } else {
       return packet;
     }
 }
 
 function processPacket(aprsSituation: State, packet) {
-  packet=ensurePacketReceivedAtIsDate(packet);
+  packet = ensurePacketReceivedAtIsDate(packet);
   aprsSituation.rawPackets.push(packet);
-  aprsSituation.lastServerTime=Math.max(aprsSituation.lastServerTime,
+  aprsSituation.lastServerTime = Math.max(aprsSituation.lastServerTime,
     packet.receivedAt.getTime());
 
   // Deduplication, summaries, etc are done as selectors.
@@ -40,36 +40,36 @@ const aprsSituationReducer = createReducer(
   initialState,
 
   on(AprsSituationActions.receivedPacket,
-    function(aprsSituation, { packet }):State {
+    (aprsSituation, { packet }): State => {
       // console.log('receivedPacket');
-      let start=Date.now();
+      const start = Date.now();
       // Since state is immutable, we need to copy the list of packets.
-      let newSituation:State = {
+      const newSituation: State = {
         ...aprsSituation,
         rawPackets: [],
         lastServerTime: 0
       };
-      aprsSituation.rawPackets.map(packet => {
-        processPacket(newSituation, packet);
+      aprsSituation.rawPackets.map(rawPacket => {
+        processPacket(newSituation, rawPacket);
       });
       processPacket(newSituation, packet);
-      let time=Date.now() - start;
+      // const time = Date.now() - start;
       // console.log("  now have " + newSituation.rawPackets.length + " (" + time + "ms)");
       return newSituation;
     }
   ),
   on(AprsSituationActions.expirePacketsBefore,
-    function(aprsSituation, { before }):State {
+    (aprsSituation, { before }) => {
       // console.log('expirePacketsBefore');
-      let start=Date.now();
+      const start = Date.now();
       // Since state is immutable, we need to copy the list of packets.
-      let newSituation:State = {
+      const newSituation: State = {
         ...aprsSituation,
         rawPackets: [],
         lastServerTime: 0
       };
       aprsSituation.rawPackets.map(packet => {
-        if(packet.receivedAt.getTime() >= before) {
+        if (packet.receivedAt.getTime() >= before) {
           processPacket(newSituation, packet);
         }
       });
@@ -78,24 +78,25 @@ const aprsSituationReducer = createReducer(
     }
   ),
   on(AprsSituationActions.receivedInitialPackets,
-    function(aprsSituation, { packets }) {
+    (aprsSituation, { packets }) => {
       // console.log('receivedInitialPackets', packets)
       // Since state is immutable, we need to copy the list of packets.
-      let newSituation:State = {
+      const newSituation: State = {
         ...aprsSituation,
         rawPackets: [],
         lastServerTime: 0,
       };
       packets.map(packet => {
         processPacket(newSituation, packet);
-    });
-    return  newSituation;
-  }),
+      });
+      return  newSituation;
+    }
+  ),
   on(AprsSituationActions.connected,
-    function(aprsSituation) {
+    aprsSituation => {
       // console.log('connected')
       // Since state is immutable, we need to copy the list of packets.
-      let newSituation:State = {
+      const newSituation: State = {
         ...aprsSituation,
         rawPackets: [],
         lastServerTime: 0,
@@ -103,14 +104,15 @@ const aprsSituationReducer = createReducer(
       };
       aprsSituation.rawPackets.map(packet => {
         processPacket(newSituation, packet);
-    });
-    return  newSituation;
-  }),
+      });
+      return  newSituation;
+    }
+  ),
   on(AprsSituationActions.disconnected,
-    function(aprsSituation) {
+    aprsSituation => {
       // console.log('disconnected')
       // Since state is immutable, we need to copy the list of packets.
-      let newSituation:State = {
+      const newSituation: State = {
         ...aprsSituation,
         rawPackets: [],
         lastServerTime: 0,
@@ -118,8 +120,8 @@ const aprsSituationReducer = createReducer(
       };
       aprsSituation.rawPackets.map(packet => {
         processPacket(newSituation, packet);
-    });
-    return  newSituation;
+      });
+      return  newSituation;
   })
 );
 

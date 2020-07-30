@@ -9,11 +9,6 @@ import { latLng, tileLayer } from 'leaflet';
 })
 export class AprsMapComponent implements OnInit {
 
-  constructor(private store: Store<any>) { }
-
-  ngOnInit() {
-  }
-
   options = {
     layers: [
       tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -23,4 +18,11 @@ export class AprsMapComponent implements OnInit {
     zoom: 7,
     center: latLng([ 46.879966, -121.726909 ])
   };
+
+  constructor(private store: Store<any>) { }
+
+  ngOnInit() {
+  }
+
+
 }

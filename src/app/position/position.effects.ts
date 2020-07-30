@@ -13,30 +13,13 @@ export class PositionEffects {
 
   watchId = -1;
 
-  reportPosition(geopos) {
-    // GeoLocationPosition isn't actually a JavaScript object, so we can't just
-    // use it.  Need to copy its values specifically.
-    let coords= {
-      latitude: geopos.coords.latitude,
-      longitude: geopos.coords.longitude,
-      altitude: geopos.coords.altitude,
-      accuracy: geopos.coords.accuracy,
-      altitudeAccuracy: geopos.coords.altitudeAccuracy,
-      heading: geopos.coords.heading,
-      speed: geopos.coords.speed
-    }
-    let pos={ coords: coords, timestamp: geopos.timestamp };
-    // console.log("Got position: " + JSON.stringify(pos, undefined, 2));
-    this.store.dispatch(PositionActions.reportPosition({position: pos }));
-  };
-
   enablePosition$ = createEffect(() => this.actions$.pipe(
     ofType(PositionActions.enablePosition),
     concatMap((action: Action) => {
-      if (navigator.geolocation == undefined) {
+      if (navigator.geolocation === undefined) {
         return of(PositionActions.positionFailure({ error: { err: 2, message: 'Geolocation not available.'}}));
       }
-      if(this.watchId !== -1) {
+      if (this.watchId !== -1) {
         navigator.geolocation.clearWatch(this.watchId);
         this.watchId = -1;
       }
@@ -61,7 +44,7 @@ export class PositionEffects {
   disablePosition$ = createEffect(() => this.actions$.pipe(
     ofType(PositionActions.disablePosition),
     concatMap(() => {
-      if(this.watchId !== -1) {
+      if (this.watchId !== -1) {
         navigator.geolocation.clearWatch(this.watchId);
         this.watchId = -1;
         return of(PositionActions.disablePositionSuccess());
@@ -71,4 +54,20 @@ export class PositionEffects {
 
   constructor(private actions$: Actions, private store: Store<any>) {}
 
+  reportPosition(geopos) {
+    // GeoLocationPosition isn't actually a JavaScript object, so we can't just
+    // use it.  Need to copy its values specifically.
+    const coords = {
+      latitude: geopos.coords.latitude,
+      longitude: geopos.coords.longitude,
+      altitude: geopos.coords.altitude,
+      accuracy: geopos.coords.accuracy,
+      altitudeAccuracy: geopos.coords.altitudeAccuracy,
+      heading: geopos.coords.heading,
+      speed: geopos.coords.speed
+    };
+    const pos = { coords, timestamp: geopos.timestamp };
+    // console.log("Got position: " + JSON.stringify(pos, undefined, 2));
+    this.store.dispatch(PositionActions.reportPosition({ position: pos }));
+  }
 }

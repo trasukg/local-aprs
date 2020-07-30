@@ -74,7 +74,7 @@ export class Haversine {
         const lat2 = Util.toRadian(next.lat);
 
         const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-                Math.sin(dLong/ 2) * Math.sin(dLong / 2) * Math.cos(lat1) * Math.cos(lat2);
+                Math.sin(dLong / 2) * Math.sin(dLong / 2) * Math.cos(lat1) * Math.cos(lat2);
 
         const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 

@@ -32,25 +32,23 @@ export class HostService extends EventEmitter {
   constructor() {
     super();
     /* Create an endpoint based on the url in the location bar. */
-    var host=window.location.host;
+    const host = window.location.host;
     // var wsUrl="ws://" + host + "/ws";
-    var wsUrl="ws://" + 'localhost:3000' + "/ws";
+    const wsUrl = 'ws://' + 'localhost:3000' + '/ws';
     // console.log("Host service started up with web socket " + wsUrl );
     /* events will be executed in different context, so preserve 'this' */
 
-    var self=this;
-
-    self.endpoint=new WebSocketAprsDataEndpoint(wsUrl);
-    self.endpoint.on('connect', function(connection) {
-      self.connected=true;
-      self.emit('connected');
+    this.endpoint = new WebSocketAprsDataEndpoint(wsUrl);
+    this.endpoint.on('connect', connection => {
+      this.connected = true;
+      this.emit('connected');
       // console.log("host service emitted connected event");
-      connection.on('disconnect', function() {
-        self.emit('disconnected');
+      connection.on('disconnect', () => {
+        this.emit('disconnected');
       });
     });
-    self.endpoint.on('aprsData', function(data) {
-      self.emit('aprsData', data);
+    this.endpoint.on('aprsData', data => {
+      this.emit('aprsData', data);
     });
 
   }
@@ -65,5 +63,5 @@ export class HostService extends EventEmitter {
 
   request(request) {
     return this.endpoint.request(request);
-  };
+  }
 }

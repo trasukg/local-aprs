@@ -11,7 +11,7 @@ import {StationRecord} from '../aprs-situation/StationRecord';
 })
 export class StationDetailComponent implements OnInit {
 
-  public station$: StationRecord=undefined;
+  public station$: StationRecord = undefined;
   stationBearings$ = this.store.select(fromAprsSituation.stationBearings);
 
   constructor(
@@ -21,12 +21,12 @@ export class StationDetailComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    let stationId = this.route.snapshot.paramMap.get('stationId');
-    console.log("Getting station details for " + stationId);
+    const stationId = this.route.snapshot.paramMap.get('stationId');
+    // console.log('Getting station details for '' + stationId);
     this.store.select(
-      fromAprsSituation.selectStation(), { stationId: stationId })
+      fromAprsSituation.selectStation(), { stationId })
       .subscribe(res => {
-      this.station$=res;
+      this.station$ = res;
     });
   }
 

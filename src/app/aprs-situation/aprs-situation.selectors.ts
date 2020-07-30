@@ -11,45 +11,45 @@ export const selectAprsSituationState = createFeatureSelector<fromAprsSituation.
 
 export const selectRawPackets = createSelector(selectAprsSituationState,
   (aprsSituation: fromAprsSituation.State) => {
-  return aprsSituation.rawPackets
+  return aprsSituation.rawPackets;
 });
 
 export const selectDeduplicatedPackets = createSelector(selectAprsSituationState,
   (aprsSituation: fromAprsSituation.State) => {
-    let deduplicator=new Deduplicator();
-    aprsSituation.rawPackets.map(packet => deduplicator.processPacket(packet))
-  return deduplicator.deduplicatedPackets;
+    const deduplicator = new Deduplicator();
+    aprsSituation.rawPackets.map(packet => deduplicator.processPacket(packet));
+    return deduplicator.deduplicatedPackets;
 });
 
 export const selectStations = createSelector(selectDeduplicatedPackets,
   (packets) => {
-    let stationProcessor=new StationProcessor();
-    packets.map(packet => stationProcessor.processPacket(packet))
-  return stationProcessor.stationsById;
+    const stationProcessor = new StationProcessor();
+    packets.map(packet => stationProcessor.processPacket(packet));
+    return stationProcessor.stationsById;
 });
 
 export const stationIds = createSelector(selectStations,
   (stations) => {
-    let stationIdsArray=Array.from(stations.keys());
-    stationIdsArray=stationIdsArray.sort();
-  return stationIdsArray;
+    let stationIdsArray = Array.from(stations.keys());
+    stationIdsArray = stationIdsArray.sort();
+    return stationIdsArray;
 });
 
 export const selectStation = () => createSelector(
   selectStations,
   (stations, props) => stations.get(props.stationId)
-)
+);
 
 export const stationBearings = createSelector(
   selectStations, stationIds, fromPosition.selectPositionState,
-  (stations, stationIds, currentPosition) => {
-    if (!currentPosition.lastFix) return {};
+  (stations, ids, currentPosition) => {
+    if (!currentPosition.lastFix) { return {}; }
     const ret = {};
     const haversine = new Haversine({
       lat: currentPosition.lastFix.coords.latitude,
       lng: currentPosition.lastFix.coords.longitude
     });
-    stationIds.forEach(stationId => {
+    ids.forEach(stationId => {
       const station = stations.get(stationId);
       // console.log('stationBearings: stationId=' + stationId + ' station.position=' + JSON.stringify(station.position));
       if (station.position) {
@@ -64,4 +64,4 @@ export const stationBearings = createSelector(
     });
     return ret;
   }
-)
+);

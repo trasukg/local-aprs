@@ -26,15 +26,9 @@ import * as fromAprsSituation from '../aprs-situation/aprs-situation.selectors';
   templateUrl: './local-aprs-packets.component.html',
   styleUrls: ['./local-aprs-packets.component.css'],
 })
-export class LocalAprsPacketsComponent implements OnInit {
-  deduplicatedPackets$: any[];
+export class LocalAprsPacketsComponent {
+  deduplicatedPackets$ = this.store.select(fromAprsSituation.selectDeduplicatedPackets);
 
   constructor(private store: Store< any > ) { }
-
-  ngOnInit() {
-    this.store.select(fromAprsSituation.selectDeduplicatedPackets).subscribe(res => {
-      this.deduplicatedPackets$=res;
-    });
-  }
 
 }

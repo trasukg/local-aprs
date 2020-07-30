@@ -19,7 +19,6 @@ under the License.
 
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { State } from '../aprs-situation/aprs-situation.reducer';
 import * as fromAprsSituation from '../aprs-situation/aprs-situation.selectors';
 
 @Component({
@@ -27,15 +26,8 @@ import * as fromAprsSituation from '../aprs-situation/aprs-situation.selectors';
   templateUrl: './raw-packets.component.html',
   styleUrls: ['./raw-packets.component.css']
 })
-export class RawPacketsComponent implements OnInit {
-  rawPackets$: any[];
+export class RawPacketsComponent {
+  rawPackets$ = this.store.select(fromAprsSituation.selectRawPackets);
 
-  constructor(private store: Store< { aprsSituation: State }> ) { }
-
-  ngOnInit() {
-    this.store.select(fromAprsSituation.selectRawPackets).subscribe(res => {
-      this.rawPackets$=res;
-    });
-  }
-
+  constructor(private store: Store< any > ) { }
 }

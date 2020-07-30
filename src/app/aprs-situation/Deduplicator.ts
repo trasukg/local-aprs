@@ -20,20 +20,20 @@ under the License.
 import { ax25utils } from 'utils-for-aprs';
 
 export class Deduplicator {
-  private dedupeIndex: Map<string,any>;
-  deduplicatedPackets: Array<any>=[];
+  private dedupeIndex: Map<string, any>;
+  deduplicatedPackets: Array<any> = [];
 
   constructor() {
-    this.dedupeIndex=new Map();
+    this.dedupeIndex = new Map();
   }
 
   clear() {
-    this.deduplicatedPackets=[];
+    this.deduplicatedPackets = [];
 
     /* Index to deduplicated packet.  Key is sender + message.  Note that the
     server has already interpreted the third-party header if there is one.
     */
-    this.dedupeIndex=new Map();
+    this.dedupeIndex = new Map();
 
   }
 
@@ -41,34 +41,34 @@ export class Deduplicator {
     // Shallow copy is enough; we're not changing the data, just adding to it.
     packet = { ...packet };
 
-    var key=ax25utils.addressToString(packet.source).concat(packet.info);
+    const key = ax25utils.addressToString(packet.source).concat(packet.info);
     if (this.dedupeIndex.get(key) === undefined) {
       // Create a new packet record for this key.
       this.dedupeIndex.set(key, packet);
       // Add the packet to the deduplicated packets.
       this.deduplicatedPackets.push(packet);
-      packet.duplicates=[];
+      packet.duplicates = [];
     } else {
-      var originalPacket=this.dedupeIndex.get(key);
+      const originalPacket = this.dedupeIndex.get(key);
       originalPacket.duplicates.push(packet);
     }
-  };
+  }
 
   expirePacketsBefore(expiryTime) {
     function filter(p) {
-      return (p.receivedAt.getTime() >= expiryTime);;
-    };
+      return (p.receivedAt.getTime() >= expiryTime);
+    }
 
-    const newDeduplicatedPackets=[];
-    for(let key of Array.from(this.dedupeIndex.keys())){
-      var packet=this.dedupeIndex.get(key);
+    const newDeduplicatedPackets = [];
+    for (const key of Array.from(this.dedupeIndex.keys())){
+      const packet = this.dedupeIndex.get(key);
       if (!filter(packet)) {
         this.dedupeIndex.delete(key);
       } else {
         newDeduplicatedPackets.push(packet);
       }
     }
-    this.deduplicatedPackets=newDeduplicatedPackets;
+    this.deduplicatedPackets = newDeduplicatedPackets;
   }
 
 }

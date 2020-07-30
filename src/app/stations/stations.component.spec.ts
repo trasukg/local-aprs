@@ -21,12 +21,14 @@ describe('StationsComponent', () => {
   });
 
   it('should be able to use a Map', () => {
-    var stationsById:Map<string, StationRecord>=new Map();
+    const stationsById: Map<string, StationRecord> = new Map();
     stationsById.set('VA3TSK', new StationRecord('VA3TSK'));
     stationsById.set('VA3ZZZ', new StationRecord('VA3ZZZ'));
-    var ids=[];
-    for(var key in stationsById) {
-      ids.push(key);
+    const ids = [];
+    for (const key in stationsById) {
+      if (stationsById.hasOwnProperty(key)) {
+        ids.push(key);
+      }
     }
     expect(ids.length).toBe(2);
   });

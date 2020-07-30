@@ -23,14 +23,14 @@ const positionReducer = createReducer(
       ...state,
       enabled: undefined,
       error: undefined
-    }
+    };
   }),
   on(PositionActions.positionFailure, (state, {error}) => {
     return {
       ...state,
       enabled: false,
-      error: error
-    }
+      error
+    };
   }),
   on(PositionActions.reportPosition, (state, {position}) => {
     return {
@@ -38,7 +38,7 @@ const positionReducer = createReducer(
       enabled: true,
       error: undefined,
       lastFix: position
-    }
+    };
   }),
 
 

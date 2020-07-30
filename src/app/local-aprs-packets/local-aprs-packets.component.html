@@ -18,7 +18,7 @@ under the License.
 -->
 <mat-list>
   <mat-list-item
-  *ngFor="let packet of deduplicatedPackets$">
+  *ngFor="let packet of (deduplicatedPackets$ | async)">
     <h3 mat-line>{{packet.receivedAt | date : 'hh:mm:ss' }} {{packet.source | ssidForm}}</h3>
     <h4 mat-line>{{packet.info}}</h4>
     <p mat-line>

@@ -29,26 +29,26 @@ import * as fromAprs from './aprs-situation.selectors';
 @Injectable()
 export class AprsSituationService extends EventEmitter {
 
-  config:any;
+  config: any;
 
   aprsSituation: any;
 
   constructor(private hostService: HostService, private store: Store<any>) {
     super();
-    let self=this;
+    const self = this;
     EventEmitter.apply(self);
 
     store.select(fromHostConfig.selectHostConfigState).subscribe(next => {
-      self.config=next;
+      self.config = next;
     });
 
     store.select(fromAprs.selectAprsSituationState).subscribe(next => {
-      self.aprsSituation=next;
+      self.aprsSituation = next;
     });
 
     // console.log("Beginning aprs-situation-service setup...")
-    /* This could reasonable be an 'effect' rather than being implemented here. */
-    hostService.on('connected', function() {
+    /* This could reasonably be an 'effect' rather than being implemented here. */
+    hostService.on('connected', () => {
       // console.log("Got connected event.");
       // Dispatch a 'connected' event.
       store.dispatch(AprsSituationActions.connected());
@@ -56,7 +56,7 @@ export class AprsSituationService extends EventEmitter {
       /* Clear the stored packets. */
       /* Request the configuration. */
       // console.log("Requesting the config")
-      hostService.request({ command: "config?"}).then(function(response) {
+      hostService.request({ command: 'config?'}).then(response => {
         // self.config=response.config;
         // self.emit('updateConfig');
         // console.log("Got the config ")
@@ -64,10 +64,10 @@ export class AprsSituationService extends EventEmitter {
         store.dispatch(HostConfigActions.loadHostConfigsSuccess({ config: response.config}));
       })
       /* Request the server's cached packets. */
-      .then(function() {
-        return hostService.request({ command: "packets?"});
+      .then( () => {
+        return hostService.request({ command: 'packets?'});
       })
-      .then(function(response) {
+      .then(response => {
         // Reimplement to dispatch a bulk-packet action.
         store.dispatch(AprsSituationActions.receivedInitialPackets(
           { packets: response.packets} ));
@@ -81,7 +81,7 @@ export class AprsSituationService extends EventEmitter {
       });
     });
 
-    hostService.on('disconnected', function() {
+    hostService.on('disconnected', () => {
       // self.connected=false;
       // self.emit('update');
 
@@ -89,33 +89,33 @@ export class AprsSituationService extends EventEmitter {
       store.dispatch(AprsSituationActions.disconnected());
     });
 
-    hostService.on('aprsData', function(packet) {
+    hostService.on('aprsData', packet => {
       // self.processPacket(packet);
       // self.calculateSummaries();
       // self.emit('update');
 
       // Reimplement to dispatch a packet-received action.
       // console.log("dispatching receivedPacket event");
-      store.dispatch(AprsSituationActions.receivedPacket({packet: packet}));
+      store.dispatch(AprsSituationActions.receivedPacket({ packet }));
     });
 
-    var expireInterval=function() {
+    const expireInterval = () =>  {
       if (self.config && self.config.standardPacketMinutesToLive) {
-        return self.config.standardPacketMinutesToLive*60*1000;
+        return self.config.standardPacketMinutesToLive * 60 * 1000;
       } else {  // Default to 60 minutes.
-        return 60*60*1000;
+        return 60 * 60 * 1000;
       }
     };
 
 
-    var expirePackets=function() {
-      var now=Date.now();
-      var expiryTime=now - expireInterval();
+    const expirePackets = () => {
+      const now = Date.now();
+      const expiryTime = now - expireInterval();
       store.dispatch(AprsSituationActions.expirePacketsBefore({ before: expiryTime} ));
-    }
-    setInterval(expirePackets,5000);
+    };
+    setInterval(expirePackets, 5000);
 
-  };
+  }
 
   enableHost() {
     // console.log("Enabling the hostService");
