@@ -49,7 +49,7 @@ export class AppComponent implements OnInit, AfterViewInit {
       }
       changeDetectorRef.detectChanges();
     };
-    this.mobileQuery.addListener(this._mobileQueryListener);
+    this.mobileQuery.addListener(this.mobileQueryListener);
   }
 
   ngOnInit() {
