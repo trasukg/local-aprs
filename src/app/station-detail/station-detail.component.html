@@ -4,9 +4,6 @@
     Last Heard: {{station$.lastHeardAt | date : 'hh:mm:ss' }}<br>
     Status: {{station$.status}}<br>
     Last comment: {{station$.comment}}<br>
-    <ng-container *ngIf="station$?.position?.coords as coords">
-      Lat: {{coords.latitude}} Long: {{coords.longitude}}
-    </ng-container>
     <div *ngIf="station$?.position?.coords as coords" class='coords'>
       Lat: {{coords.latitude}} Long: {{coords.longitude}}<br>
       {{ (stationBearings$ | async)[station$.stationId]?.distance / 1000 | number:'1.1-1' }}km

@@ -40,8 +40,8 @@ import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { AprsSituationEffects } from './aprs-situation/aprs-situation.effects';
 import * as fromAprsSituation from './aprs-situation/aprs-situation.reducer';
-import * as fromHostConfig from './host-config/host-config.reducer';
-import { HostConfigEffects } from './host-config/host-config.effects';
+import * as fromConfig from './config/config.reducer';
+import { ConfigEffects } from './config/config.effects';
 import { AppEffects } from './app.effects';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from '../environments/environment';
@@ -52,6 +52,8 @@ import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 import * as fromPosition from './position/position.reducer';
 import { PositionEffects } from './position/position.effects';
 import * as PositionActions from './position/position.actions';
+import * as fromMapDisplay from './map-display/map-display.reducer';
+import { MapDisplayEffects } from './map-display/map-display.effects';
 
 const appRoutes: Routes = [
   { path: 'packets', component: LocalAprsPacketsComponent },
@@ -92,7 +94,7 @@ const appRoutes: Routes = [
     StoreModule.forRoot(
       {
         aprsSituation: fromAprsSituation.reducer,
-        hostConfig: fromHostConfig.reducer
+        config: fromConfig.reducer
       },
       {
         runtimeChecks: {
@@ -101,13 +103,13 @@ const appRoutes: Routes = [
         }
       }
     ),
-    EffectsModule.forFeature([AprsSituationEffects, HostConfigEffects, PositionEffects]),
+    EffectsModule.forFeature([AprsSituationEffects, ConfigEffects, PositionEffects, MapDisplayEffects]),
     StoreModule.forFeature(fromAprsSituation.aprsSituationFeatureKey, fromAprsSituation.reducer),
-    StoreModule.forFeature(fromHostConfig.hostConfigFeatureKey, fromHostConfig.reducer),
     EffectsModule.forRoot([AppEffects]),
     StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production }),
     LeafletModule.forRoot(),
-    StoreModule.forFeature(fromPosition.positionFeatureKey, fromPosition.reducer)
+    StoreModule.forFeature(fromPosition.positionFeatureKey, fromPosition.reducer),
+    StoreModule.forFeature(fromMapDisplay.mapDisplayFeatureKey, fromMapDisplay.reducer)
   ],
   providers: [
     AprsSituationService,

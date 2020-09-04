@@ -9,6 +9,10 @@ export const receivedPacket = createAction(
   props<{ packet: any }>()
 );
 
+export const loadInitialPackets = createAction(
+  '[Packet] Load Initial Packets'
+);
+
 export const receivedInitialPackets = createAction(
   '[Packet] Receive Initial Packets',
   props<{ packets: any[] }>()

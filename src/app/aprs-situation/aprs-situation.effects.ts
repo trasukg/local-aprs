@@ -4,15 +4,45 @@ import { catchError, map, concatMap, tap } from 'rxjs/operators';
 import { EMPTY, of } from 'rxjs';
 import { AprsSituationService } from './aprs-situation.service';
 import * as AprsSituationActions from './aprs-situation.actions';
-
+import * as ConfigActions from '../config/config.actions';
 
 @Injectable()
 export class AprsSituationEffects {
 
   constructor(private actions$: Actions, private aprsSituationService: AprsSituationService) {}
 
-  loadHostConfigs$ = createEffect(() => this.actions$.pipe(
+  enableHostConnection$ = createEffect(() => this.actions$.pipe(
     ofType(AprsSituationActions.enableHostConnection),
       tap(action => this.aprsSituationService.enableHost())
     ), { dispatch: false });
+
+  /*
+    On connection, load the config and the initial packets.
+  */
+  hostConnected$ = createEffect(() => this.actions$.pipe(
+    ofType(AprsSituationActions.connected),
+      concatMap(() => of(
+        ConfigActions.loadHostConfig(),
+        AprsSituationActions.loadInitialPackets()
+      ))
+    )
+  );
 }
+
+// /* Request the server's cached packets. */
+// .then( () => {
+//   return hostService.request({ command: 'packets?'});
+// })
+// .then(response => {
+//   // Reimplement to dispatch a bulk-packet action.
+//   store.dispatch(AprsSituationActions.receivedInitialPackets(
+//     { packets: response.packets} ));
+//
+//   // self.clearPackets();
+//   // response.packets.forEach(function(item) {
+//   //   self.processPacketWithoutUpdate(item);
+//   // });
+//   // self.calculateSummaries();
+//   // self.emit('update');
+// });
+// );

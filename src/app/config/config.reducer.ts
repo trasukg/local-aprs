@@ -17,13 +17,23 @@ specific language governing permissions and limitations
 under the License.
 */
 
-export class ClientConfig {
-  public keepMapCenteredOnPosition: boolean;
-  public northUp: boolean;
-  public standardPacketMinutesToLive: number;
-  public bulletinHoursToLive: number;
-  public announcementHoursToLive: number;
-  
-  constructor() {}
+import { Action, createReducer, on } from '@ngrx/store';
+import * as ConfigActions from './config.actions';
 
+export const configFeatureKey = 'config';
+
+
+export const initialState = {
+
+};
+
+const configReducer = createReducer(
+  initialState,
+
+  on(ConfigActions.loadHostConfigSuccess, (state, action) => action.config),
+
+);
+
+export function reducer(state: any | undefined, action: Action) {
+  return configReducer(state, action);
 }

@@ -22,8 +22,8 @@ import { HostService } from '../host.service';
 import { EventEmitter } from 'events';
 import { Store } from '@ngrx/store';
 import * as AprsSituationActions from './aprs-situation.actions';
-import * as HostConfigActions from '../host-config/host-config.actions';
-import * as fromHostConfig from '../host-config/host-config.selectors';
+import * as ConfigActions from '../config/config.actions';
+import * as fromConfig from '../config/config.selectors';
 import * as fromAprs from './aprs-situation.selectors';
 
 @Injectable()
@@ -38,7 +38,7 @@ export class AprsSituationService extends EventEmitter {
     const self = this;
     EventEmitter.apply(self);
 
-    store.select(fromHostConfig.selectHostConfigState).subscribe(next => {
+    store.select(fromConfig.selectConfigState).subscribe(next => {
       self.config = next;
     });
 
@@ -52,34 +52,8 @@ export class AprsSituationService extends EventEmitter {
       // console.log("Got connected event.");
       // Dispatch a 'connected' event.
       store.dispatch(AprsSituationActions.connected());
-      // console.log("Dispatched connected action");
-      /* Clear the stored packets. */
-      /* Request the configuration. */
-      // console.log("Requesting the config")
-      hostService.request({ command: 'config?'}).then(response => {
-        // self.config=response.config;
-        // self.emit('updateConfig');
-        // console.log("Got the config ")
-        // Dispatch a 'configure' action.
-        store.dispatch(HostConfigActions.loadHostConfigsSuccess({ config: response.config}));
-      })
-      /* Request the server's cached packets. */
-      .then( () => {
-        return hostService.request({ command: 'packets?'});
-      })
-      .then(response => {
-        // Reimplement to dispatch a bulk-packet action.
-        store.dispatch(AprsSituationActions.receivedInitialPackets(
-          { packets: response.packets} ));
-
-        // self.clearPackets();
-        // response.packets.forEach(function(item) {
-        //   self.processPacketWithoutUpdate(item);
-        // });
-        // self.calculateSummaries();
-        // self.emit('update');
-      });
     });
+
 
     hostService.on('disconnected', () => {
       // self.connected=false;
