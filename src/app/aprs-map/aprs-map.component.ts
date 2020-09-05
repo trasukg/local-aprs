@@ -24,5 +24,8 @@ export class AprsMapComponent implements OnInit {
   ngOnInit() {
   }
 
+  zoom = 8;
+  center = latLng([ 46.879966, -121.726909 ]);
+
 
 }
