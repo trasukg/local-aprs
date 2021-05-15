@@ -22,15 +22,36 @@ import * as ConfigActions from './config.actions';
 
 export const configFeatureKey = 'config';
 
+export class ConfigEntry<T> {
+  public value: T;
+  public isFinal: boolean;
+}
 
-export const initialState = {
+export class ClientConfig {
+  public keepMapCenteredOnPosition: ConfigEntry<boolean>;
+  public northUp: ConfigEntry<boolean>;
+  public standardPacketMinutesToLive: ConfigEntry<number>;
+  public bulletinHoursToLive: ConfigEntry<number>;
+  public announcementHoursToLive: ConfigEntry<number>;
+  public deduplicationTimeSpan: ConfigEntry<number>;
+}
 
-};
+export class ConfigState {
+  public configFromHost: ClientConfig = null;
+  public configFromLocalStorage: ClientConfig = null;
+}
+
+export const initialState = new ConfigState();
 
 const configReducer = createReducer(
   initialState,
 
-  on(ConfigActions.loadHostConfigSuccess, (state, action) => action.config),
+  on(ConfigActions.loadHostConfigSuccess, (state, action) => {
+    return {
+      ...state,
+      configFromHost: action.config
+    };
+  }),
 
 );
 

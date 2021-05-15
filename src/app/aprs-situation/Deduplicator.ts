@@ -37,20 +37,38 @@ export class Deduplicator {
 
   }
 
-  processPacket(packet) {
+  processPacket(packet, deduplicationTimeSpan) {
     // Shallow copy is enough; we're not changing the data, just adding to it.
     packet = { ...packet };
 
     const key = ax25utils.addressToString(packet.source).concat(packet.info);
     if (this.dedupeIndex.get(key) === undefined) {
       // Create a new packet record for this key.
-      this.dedupeIndex.set(key, packet);
+      this.dedupeIndex.set(key, [ packet] );
       // Add the packet to the deduplicated packets.
       this.deduplicatedPackets.push(packet);
       packet.duplicates = [];
     } else {
-      const originalPacket = this.dedupeIndex.get(key);
-      originalPacket.duplicates.push(packet);
+      /* At this point, we have a set of packets that match the header and info,
+      and we need to see if the new packet should be added to the latest, or added
+      on its own as a new dedupe-set.
+
+      Note that by definition, there will only ever be zero or one packet set that is within
+      the deduplication time span.  This is because a new dedupe set is created only
+      when the previous set is out of the dedupe time span.  So there's no need
+      to sort the dedupe sets, we can just look for one that is inside the dedupe time span.
+      */
+      const dedupeSets = this.dedupeIndex.get(key);
+      for(let i in dedupeSets) {
+        let p = dedupeSets[i]
+        if ((packet.receivedAt.getTime() - p.receivedAt.getTime()) <= deduplicationTimeSpan) {
+          p.duplicates.push(packet);
+          return;
+        }
+      }
+      dedupeSets.push(packet);
+      this.deduplicatedPackets.push(packet);
+      packet.duplicates = [];
     }
   }
 

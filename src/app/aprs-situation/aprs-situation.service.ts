@@ -38,7 +38,7 @@ export class AprsSituationService extends EventEmitter {
     const self = this;
     EventEmitter.apply(self);
 
-    store.select(fromConfig.selectConfigState).subscribe(next => {
+    store.select(fromConfig.selectConfig).subscribe(next => {
       self.config = next;
     });
 

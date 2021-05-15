@@ -25,8 +25,8 @@ var path=require('path');
 var express=require('express');
 
 const staticFilesAreInDist=function(ctx) {
-  ctx.serverHomePath=path.join(process.cwd(),"dist")
-  console.log("static files in '" + ctx.serverHomePath + "'")
+  ctx.serverHomePath=path.join(process.cwd(),"dist","ng-app");
+  console.log("static files in '" + ctx.serverHomePath + "'");
   ctx.app.use(express.static( ctx.serverHomePath,
     { dotfiles: 'deny', index: 'index.html'}));
   ctx.app.get('/', function(req,res) {

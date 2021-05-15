@@ -1,0 +1,31 @@
+{
+  "keepMapCenteredOnPosition": {
+    "value": true,
+    "isFinal": false
+  },
+
+  "northUp": {
+    "value": true,
+    "isFinal": false
+  },
+
+  "standardPacketMinutesToLive": {
+    "value": 60,
+    "isFinal": true
+  },
+
+  "bulletinHoursToLive": {
+    "value": 1,
+    "isFinal": false
+  },
+
+  "announcementHoursToLive": {
+    "value": 1,
+    "isFinal": false
+  },
+
+  "deduplicationTimeSpan": {
+    "value": 30000,
+    "isFinal": true
+  }
+}

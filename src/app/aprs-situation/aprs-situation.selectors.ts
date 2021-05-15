@@ -4,6 +4,7 @@ import { Deduplicator } from './Deduplicator';
 import { StationProcessor } from './StationProcessor';
 import { Haversine } from '../haversine-position';
 import * as fromPosition from '../position/position.selectors';
+import { selectConfig } from '../config/config.selectors';
 
 export const selectAprsSituationState = createFeatureSelector<fromAprsSituation.State>(
   fromAprsSituation.aprsSituationFeatureKey
@@ -14,10 +15,12 @@ export const selectRawPackets = createSelector(selectAprsSituationState,
   return aprsSituation.rawPackets;
 });
 
-export const selectDeduplicatedPackets = createSelector(selectAprsSituationState,
-  (aprsSituation: fromAprsSituation.State) => {
+export const selectDeduplicatedPackets = createSelector(
+  selectAprsSituationState,
+  selectConfig,
+  (aprsSituation: fromAprsSituation.State, config) => {
     const deduplicator = new Deduplicator();
-    aprsSituation.rawPackets.map(packet => deduplicator.processPacket(packet));
+    aprsSituation.rawPackets.map(packet => deduplicator.processPacket(packet, config.deduplicationTimeSpan));
     return deduplicator.deduplicatedPackets;
 });
 

@@ -57,7 +57,7 @@ var handleWSMessage=function(ctx, ws, msg) {
   logger.debug("command=" + msg.command);
   if (msg.command=='config?') {
     ws.send(JSON.stringify({
-      config: ctx.config,
+      config: ctx.clientConfig,
       replyTo: msg.msgId
     }));
   } else if (msg.command=="packets?") {

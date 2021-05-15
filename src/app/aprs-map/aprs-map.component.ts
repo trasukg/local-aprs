@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { latLng, tileLayer } from 'leaflet';
+import { selectCenter, selectZoom } from '../map-display/map-display.selectors';
+import { setCenter, setZoom } from '../map-display/map-display.actions';
 
 @Component({
   selector: 'app-aprs-map',
@@ -14,9 +16,7 @@ export class AprsMapComponent implements OnInit {
       tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; OpenStreetMap contributors'
       })
-    ],
-    zoom: 7,
-    center: latLng([ 46.879966, -121.726909 ])
+    ]
   };
 
   constructor(private store: Store<any>) { }
@@ -24,8 +24,21 @@ export class AprsMapComponent implements OnInit {
   ngOnInit() {
   }
 
-  zoom = 8;
-  center = latLng([ 46.879966, -121.726909 ]);
+  zoom$ = this.store.select(selectZoom);
 
+  center$ = this.store.select(selectCenter);
 
+  mapMove(event) {
+    console.log('mapMove(' + JSON.stringify(event.sourceTarget.center) + ')');
+  }
+
+  zoomChange(zoom) {
+    console.log('mapZoomChange(' + zoom + ')');
+    this.store.dispatch(setZoom({ zoom, isUserSourced: true }));
+  }
+
+  centerChange(center) {
+    console.log('mapCenterChange(' + center + ')');
+    this.store.dispatch(setCenter({ center, isUserSourced: true }))
+  }
 }
