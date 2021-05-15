@@ -29,6 +29,7 @@ var process=require('process');
 
 var ctx={};
 ctx.config=require("../config.json");
+ctx.clientConfig = require('../client-config.json');
 
 loggingIsDoneThroughLog4js(ctx);
 

@@ -1,5 +1,11 @@
 
   <div class="map"
          leaflet
-         [leafletOptions]="options">
+         [leafletOptions]="options"
+         [leafletCenter]="center$ | async"
+         [leafletZoom]="zoom$ | async"
+         (leafletZoomChange)="zoomChange($event)"
+         (leafletCenterChange)="centerChange($event)"
+         (leafletMapMove)="mapMove($event)">
+
   </div>
