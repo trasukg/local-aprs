@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { LocalAprsPacketsComponent } from './local-aprs-packets.component';
 
@@ -25,7 +25,7 @@ describe('LocalAprsPacketsComponent', () => {
   let component: LocalAprsPacketsComponent;
   let fixture: ComponentFixture<LocalAprsPacketsComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ LocalAprsPacketsComponent ]
     })
