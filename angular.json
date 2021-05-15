@@ -21,7 +21,6 @@
               "utils-for-aprs",
               "haversine-position"
             ],
-            "aot": true,
             "outputPath": "dist/ng-app",
             "index": "src/index.html",
             "main": "src/main.ts",
@@ -46,7 +45,13 @@
               "src/styles.sass",
               "./node_modules/leaflet/dist/leaflet.css"
             ],
-            "scripts": []
+            "scripts": [],
+            "vendorChunk": true,
+            "extractLicenses": false,
+            "buildOptimizer": false,
+            "sourceMap": true,
+            "optimization": false,
+            "namedChunks": true
           },
           "configurations": {
             "production": {
@@ -59,9 +64,7 @@
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
-              "extractCss": true,
               "namedChunks": false,
-              "aot": true,
               "extractLicenses": true,
               "vendorChunk": false,
               "buildOptimizer": true,
