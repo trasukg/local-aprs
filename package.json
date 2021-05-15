@@ -38,7 +38,7 @@
     "express": "^4.17.1",
     "express-hbs": "^2.3.4",
     "express-ws": "^4.0.0",
-    "handlebars": "^4.5.3",
+    "handlebars": "^4.7.7",
     "leaflet": "^1.7.1",
     "log4js": "^4.5.1",
     "material-design-icons": "^3.0.1",
