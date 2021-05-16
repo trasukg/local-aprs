@@ -48,7 +48,6 @@ import { environment } from '../environments/environment';
 import { Store } from '@ngrx/store';
 import * as AprsSituationActions from './aprs-situation/aprs-situation.actions';
 import { AprsMapComponent } from './aprs-map/aprs-map.component';
-import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 import * as fromPosition from './position/position.reducer';
 import { PositionEffects } from './position/position.effects';
 import * as PositionActions from './position/position.actions';
@@ -108,7 +107,6 @@ const appRoutes: Routes = [
     StoreModule.forFeature(fromAprsSituation.aprsSituationFeatureKey, fromAprsSituation.reducer),
     EffectsModule.forRoot([AppEffects]),
     StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production }),
-    LeafletModule.forRoot(),
     StoreModule.forFeature(fromPosition.positionFeatureKey, fromPosition.reducer),
     StoreModule.forFeature(fromMapDisplay.mapDisplayFeatureKey, fromMapDisplay.reducer)
   ],

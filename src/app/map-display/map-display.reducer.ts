@@ -26,5 +26,10 @@ export const reducer = createReducer(
   on(MapDisplayActions.loadMapDisplays, state => state),
   on(MapDisplayActions.loadMapDisplaysSuccess, (state, action) => state),
   on(MapDisplayActions.loadMapDisplaysFailure, (state, action) => state),
-
+  on(MapDisplayActions.setZoom, (state, { zoom }) => {
+    return {
+      ...state,
+      zoom
+    };
+  })
 );
