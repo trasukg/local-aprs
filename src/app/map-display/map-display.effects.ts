@@ -32,12 +32,11 @@ export class MapDisplayEffects {
     return this.store.select(selectLastFix).pipe(
       withLatestFrom(this.config$),
       concatMap( ([lastFix, config]) => {
-        console.log('followPosition got lastFix=' + JSON.stringify(lastFix));
+        //console.log('followPosition got lastFix=' + JSON.stringify(lastFix));
         if (config.keepMapCenteredOnPosition) {
           return of(
             setCenter( {
-              center: latLng(lastFix.coords.latitude, lastFix.coords.longitude ),
-              isUserSourced: false
+              center: latLng(lastFix.coords.latitude, lastFix.coords.longitude )
             })
           );
         } else {

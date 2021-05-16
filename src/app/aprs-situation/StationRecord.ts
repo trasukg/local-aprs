@@ -37,8 +37,6 @@ export class StationRecord {
     const packetFrom = ax25utils.addressToString(packet.source);
     if (! (packetFrom === this.stationId)) {
       // We were handed a packet for a different station.
-      console.log('Station record for ' + this.stationId + ' got packet for '
-        + packetFrom);
       return;
     }
     // console.log('Adding ' + packet.receivedAt + ' to log for '

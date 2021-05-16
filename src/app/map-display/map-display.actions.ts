@@ -16,10 +16,10 @@ export const loadMapDisplaysFailure = createAction(
 
 export const setCenter = createAction(
   '[MapDisplay] Set Center',
-  props<{ center: any, isUserSourced: boolean }>()
+  props<{ center: any }>()
 );
 
 export const setZoom = createAction(
   '[MapDisplay] Set Zoom',
-  props<{ zoom: any, isUserSourced: boolean }>()
+  props<{ zoom: any }>()
 );
