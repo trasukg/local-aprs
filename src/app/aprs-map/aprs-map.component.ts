@@ -65,11 +65,11 @@ export class AprsMapComponent implements AfterViewInit {
         if (station.position.symbolTableId) {
           const symbol = station.position.symbolTableId + station.position.symbolId;
           iconStr = this.getAPRSSymbolImageTag(symbol)
-          console.log("iconStr for " + station.stationId + ", symbol " + symbol + " is " + iconStr);
+          // console.log("iconStr for " + station.stationId + ", symbol " + symbol + " is " + iconStr);
         }
         const icon = L.divIcon({
           className: 'station-icon',
-          html: iconStr + station.stationId
+          html: iconStr + '<div class=station-text >' + station.stationId + '</div>'
         });
         L.marker(
           [station.position.coords.latitude, station.position.coords.longitude],
@@ -79,6 +79,10 @@ export class AprsMapComponent implements AfterViewInit {
     });
   }
 
+  // private translation = [
+  //   '!"#$%&\'()*+,-./0', '123456789:;<=>?@', 'ABCDEFGHIJKLMNOP', 'QRSTUVWXYZ[\\]^_`', 'abcdefghijklmnop', 'qrstuvwxyz{|}~'
+  // ];
+
   /**
   * Returns address of symbol in tables or false if not found
   *
@@ -86,11 +90,18 @@ export class AprsMapComponent implements AfterViewInit {
   * @return {array|boolean} address in tables or false
   * */
   private getAPRSSymbolAddress(symbol) {
+    let overlay = undefined;
     const tableSymbol = symbol.charAt(0);
-    // Until we figure out how to overlay the symbols, we'll just use the secondary table.
-    // const table = tableSymbol === '/' ? 0 : (tableSymbol === '\\' ? 1 : 2);
-    const table = tableSymbol === '/' ? 0 : 1;
     const search = symbol.charAt(1);
+    let table;
+    if (tableSymbol === '/') {
+      table = 0;
+    } else if (tableSymbol === '\\') {
+      table = 1;
+    } else {
+      table = 1;
+      overlay = tableSymbol;
+    }
     const translation = [
       '!"#$%&\'()*+,-./0', '123456789:;<=>?@', 'ABCDEFGHIJKLMNOP', 'QRSTUVWXYZ[\\]^_`', 'abcdefghijklmnop', 'qrstuvwxyz{|}~'
     ];
@@ -98,7 +109,8 @@ export class AprsMapComponent implements AfterViewInit {
       const rowData = translation[row];
       for (let col = 0; col < rowData.length; col++) {
         if (rowData[col] === search) {
-          return [table, row, col];
+          const ret = [table, row, col, overlay];
+          return ret;
         }
       }
     }
@@ -113,10 +125,16 @@ export class AprsMapComponent implements AfterViewInit {
   * @return {string|boolean} image tag or false on failure
   * */
   private getAPRSSymbolImageTagByAddress(address, size = 24) {
-    if (typeof address === 'undefined' || !Array.isArray(address) || address.length !== 3) {
+    if (typeof address === 'undefined' || !Array.isArray(address) || address.length !== 4) {
       return undefined;
     }
-    return "<i class='aprs-table" + address[0] + "-" + size + " aprs-address-" + size + "-" + address[1] + "-" + address[2] + "'></i>";
+    let ret = "<i class='aprs-table" + address[0] + "-" + size + " aprs-address-" + size + "-" + address[1] + "-" + address[2] + "'></i>";
+    // In case of overlay, add a second icon.
+    if (address[3]) {
+      let [overlayTable, overlayRow, overlayCol] = this.getAPRSSymbolAddress('/' + address[3]);
+      ret = ret + "<i class='aprs-overlay" + "-" + size + " aprs-address-" + size + "-" + overlayRow + "-" + overlayCol + "'></i>";
+    }
+    return ret;
   }
 
   /**

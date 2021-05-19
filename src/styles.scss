@@ -22,7 +22,7 @@
 @import "~@angular/material/prebuilt-themes/indigo-pink.css";
 
 $sizes: 24;
-$tables: 0, 1, 2;
+$tables: 0, 1;
 $table_template: "/aprs-symbols/aprs-symbols-SIZE-TABLE.png";
 
 $rows: 5;
@@ -62,6 +62,28 @@ $columns: 15;
   }
 }
 
+@each $size in $sizes {
+  i.aprs-overlay-#{$size} {
+    @extend %aprs-table;
+    position: absolute;
+    left: 0;
+    top: 0;
+    background: url(str-replace(str-replace($table_template, 'TABLE', '2'), 'SIZE', $size)) no-repeat;
+    width: #{$size}px;
+    height: #{$size}px;
+  }
+}
+
+i.aprs-overlay {
+  @extend %aprs-table;
+  position: absolute;
+  left: 0;
+  top: 0;
+  background: url(str-replace(str-replace($table_template, 'TABLE', '2'), 'SIZE', '24')) no-repeat;
+  width: 24px;
+  height: 24px;
+  }
+
 @for $row from 0 through $rows {
   @for $column from 0 through $columns {
     @each $size in $sizes {
@@ -77,4 +99,16 @@ $columns: 15;
       background-position: -#{$column-offset}px -#{$row-offset}px;
     }
   }
+}
+
+.station-icon {
+  border: none;
+  width: fit-content;
+  height: fit-content;
+  display: inline flow;
+}
+
+.station-text {
+  font-weight: bold;
+  display: inline;
 }
