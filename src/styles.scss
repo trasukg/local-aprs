@@ -1,0 +1,114 @@
+
+/*Licensed to the Apache Software Foundation (ASF) under one
+  or more contributor license agreements.  See the NOTICE file
+  distributed with this work for additional information
+  regarding copyright ownership.  The ASF licenses this file
+  to you under the Apache License, Version 2.0 (the
+  "License"); you may not use this file except in compliance
+  with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing,
+  software distributed under the License is distributed on an
+  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  KIND, either express or implied.  See the License for the
+  specific language governing permissions and limitations
+  under the License.
+*/
+
+
+/* You can add global styles to this file, and also import other style files */
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+
+$sizes: 24;
+$tables: 0, 1;
+$table_template: "/aprs-symbols/aprs-symbols-SIZE-TABLE.png";
+
+$rows: 5;
+$columns: 15;
+
+@function str-replace($string, $search, $replace: '') {
+  $index: str-index($string, $search);
+
+  @if $index {
+    @return str-slice($string, 1, $index - 1) + $replace + str-replace(str-slice($string, $index + str-length($search)), $search, $replace);
+  }
+
+  @return $string;
+}
+
+%aprs-table {
+  display: inline-block;
+  margin: 0 0 -8px;
+  padding: 0;
+}
+
+@each $table in $tables {
+  @each $size in $sizes {
+    i.aprs-table#{$table}-#{$size} {
+      @extend %aprs-table;
+      background: url(str-replace(str-replace($table_template, 'TABLE', $table), 'SIZE', $size)) no-repeat;
+      width: #{$size}px;
+      height: #{$size}px;
+    }
+  }
+
+  i.aprs-table#{$table} {
+    @extend %aprs-table;
+    background: url(str-replace(str-replace($table_template, 'TABLE', $table), 'SIZE', '24')) no-repeat;
+    width: 24px;
+    height: 24px;
+  }
+}
+
+@each $size in $sizes {
+  i.aprs-overlay-#{$size} {
+    @extend %aprs-table;
+    position: absolute;
+    left: 0;
+    top: 0;
+    background: url(str-replace(str-replace($table_template, 'TABLE', '2'), 'SIZE', $size)) no-repeat;
+    width: #{$size}px;
+    height: #{$size}px;
+  }
+}
+
+i.aprs-overlay {
+  @extend %aprs-table;
+  position: absolute;
+  left: 0;
+  top: 0;
+  background: url(str-replace(str-replace($table_template, 'TABLE', '2'), 'SIZE', '24')) no-repeat;
+  width: 24px;
+  height: 24px;
+  }
+
+@for $row from 0 through $rows {
+  @for $column from 0 through $columns {
+    @each $size in $sizes {
+      i.aprs-address-#{$size}-#{$row}-#{$column} {
+        $row-offset: $row * $size;
+        $column-offset: $column * $size;
+        background-position: -#{$column-offset}px -#{$row-offset}px;
+      }
+    }
+    i.aprs-address-#{$row}-#{$column} {
+      $row-offset: $row * 24;
+      $column-offset: $column * 24;
+      background-position: -#{$column-offset}px -#{$row-offset}px;
+    }
+  }
+}
+
+.station-icon {
+  border: none;
+  width: fit-content;
+  height: fit-content;
+  display: inline flow;
+}
+
+.station-text {
+  font-weight: bold;
+  display: inline;
+}
