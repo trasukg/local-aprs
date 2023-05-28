@@ -42,7 +42,6 @@
     "material-design-icons": "^3.0.1",
     "net": "^1.0.2",
     "rxjs": "^6.6.7",
-    "serialport": "^6.2.2",
     "serve-static": "^1.14.1",
     "tslib": "^2.2.0",
     "utils-for-aprs": "^2.2.10",
