@@ -22,9 +22,9 @@
     "url": "git@github.com:trasukg/local-aprs.git"
   },
   "dependencies": {
-    "@angular/animations": "^12.0.0",
+    "@angular/animations": "^13.4.0",
     "@angular/cdk": "~12.0.0",
-    "@angular/forms": "^12.0.0",
+    "@angular/forms": "^13.4.0",
     "@angular/material": "~12.0.0",
     "@ngrx/effects": "^12.0.0",
     "@ngrx/store": "^12.0.0",
@@ -50,20 +50,20 @@
   },
   "devDependencies": {
     "@angular-builders/custom-webpack": "^11.1.1",
-    "@angular-devkit/build-angular": "~12.0.0",
+    "@angular-devkit/build-angular": "~13.3.11",
     "@angular-eslint/builder": "12.0.0",
     "@angular-eslint/eslint-plugin": "12.0.0",
     "@angular-eslint/eslint-plugin-template": "12.0.0",
     "@angular-eslint/schematics": "12.0.0",
     "@angular-eslint/template-parser": "12.0.0",
-    "@angular/cli": "~12.0.0",
-    "@angular/common": "~12.0.0",
-    "@angular/compiler": "~12.0.0",
-    "@angular/compiler-cli": "~12.0.0",
-    "@angular/core": "~12.0.0",
-    "@angular/platform-browser": "^12.0.0",
-    "@angular/platform-browser-dynamic": "^12.0.0",
-    "@angular/router": "~12.0.0",
+    "@angular/cli": "~13.3.11",
+    "@angular/common": "~13.4.0",
+    "@angular/compiler": "~13.4.0",
+    "@angular/compiler-cli": "~13.4.0",
+    "@angular/core": "~13.4.0",
+    "@angular/platform-browser": "^13.4.0",
+    "@angular/platform-browser-dynamic": "^13.4.0",
+    "@angular/router": "~13.4.0",
     "@ngrx/schematics": "^12.0.0",
     "@types/events": "^1.2.0",
     "@types/jasmine": "~3.6.0",
@@ -83,6 +83,6 @@
     "protractor": "~7.0.0",
     "tar": "^5.0.10",
     "ts-node": "~7.0.0",
-    "typescript": "~4.2.4"
+    "typescript": "~4.6.4"
   }
 }
