@@ -7,7 +7,8 @@
     "test": "jasmine && ng-test",
     "build": "ng build --prod",
     "start": "node server/server.js",
-    "serve": "ng serve --host 0.0.0.0 --disable-host-check --poll 1000",    "lint": "ng lint",
+    "serve": "ng serve --host 0.0.0.0 --disable-host-check --poll 1000",
+    "lint": "ng lint",
     "e2e": "ng e2e"
   },
   "keywords": [
@@ -45,6 +46,7 @@
     "serve-static": "^1.14.1",
     "tslib": "^2.2.0",
     "utils-for-aprs": "^2.2.10",
+    "watch-aprs": "^1.0.2",
     "wgs84": "0.0.0",
     "zone.js": "~0.13.0"
   },
